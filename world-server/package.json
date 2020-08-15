@@ -1,0 +1,16 @@
+{
+    "name": "world-server",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "tsc --build",
+        "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    },
+    "author": "ptr2020",
+    "licence": "MIT",
+    "devDependencies": {
+        "@types/node": "^14.0.27",
+        "resolve": "^1.17.0",
+        "ts-node-dev": "^1.0.0-pre.57",
+        "typescript": "^3.9.7"
+    }
+}

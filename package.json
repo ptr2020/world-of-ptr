@@ -1,0 +1,16 @@
+{
+    "name": "world-of-ptr",
+    "private": true,
+    "workspaces": [
+        "world-server",
+        "world-core"
+    ],
+    "scripts": {
+        "server": "yarn workspace world-server",
+        "core": "yarn workspace world-core",
+        "build": "tsc --build"
+    },
+    "devDependencies": {
+        "typescript": "^3.9.7"
+    }
+}
