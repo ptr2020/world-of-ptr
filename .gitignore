@@ -112,3 +112,6 @@ dist
 # App
 dist
 bin
+
+# Mac trash
+.DS_Store

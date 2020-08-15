@@ -1,0 +1,22 @@
+{
+  "name": "phasertest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Duhec",
+  "license": "ISC",
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.0.0",
+    "source-map-loader": "^1.0.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "phaser": "^3.24.1",
+    "webpack": "^4.44.1"
+  }
+}
