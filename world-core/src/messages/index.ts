@@ -1,3 +1,3 @@
 
-export { Message } from '../messages/Message';
-export { MsgHandler } from '../messages/MsgHandler';
+export { Message } from './Message';
+export { MsgHandler } from './MsgHandler';

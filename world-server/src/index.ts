@@ -1,3 +1,4 @@
-import { Logger } from 'world-core';
+import { Server } from './network';
 
-Logger.info("Hello!");
+let srv: Server = new Server();
+srv.init(8080);
