@@ -1,6 +1,7 @@
 {
     "name": "world-of-ptr",
     "private": true,
+    "license": "MIT",
     "workspaces": [
         "world-server",
         "world-core",
