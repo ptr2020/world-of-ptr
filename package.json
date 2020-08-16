@@ -3,11 +3,13 @@
     "private": true,
     "workspaces": [
         "world-server",
-        "world-core"
+        "world-core",
+        "world-client"
     ],
     "scripts": {
         "server": "yarn workspace world-server",
         "core": "yarn workspace world-core",
+        "web": "yarn workspace world-client",
         "build": "tsc --build"
     },
     "devDependencies": {
