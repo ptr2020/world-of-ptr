@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "WOP_HOST=ws://localhost:8081 webpack-dev-server",
+    "build": "webpack",
+    "build-default": "WOP_HOST=ws://192.168.1.1:8081 webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Duhec",

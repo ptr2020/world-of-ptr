@@ -1,5 +1,5 @@
 const path = require('path');
-//const webpack = require('webpack');
+const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 
 let mode = "development";
@@ -11,7 +11,7 @@ module.exports = {
   },
   output: {
     filename: 'bundle.min.js',
-    path: path.resolve(__dirname, 'build')
+    path: path.resolve(__dirname, 'dist')
   },
   module: {
     rules: [
@@ -26,30 +26,20 @@ module.exports = {
     new CopyPlugin([
       {from: './src/public/index.html', to: 'index.html'},
       {from: './src/public/main.css', to: 'main.css'},
-      {from: './src/public/img', to: 'img'},
+      {from: './src/public/resources', to: 'resources'},
     ]),
     // Pass env variables into javascript
-    //new webpack.DefinePlugin({
-    //  "someVar": JSON.stringify(process.env.someVar)
-    //}),
+    new webpack.DefinePlugin({
+      "WOP_HOST": JSON.stringify(process.env.WOP_HOST),
+    }),
   ],
   mode: mode,
   devServer: {
-    contentBase: path.join(__dirname, 'build'),
+    contentBase: path.join(__dirname, 'dist'),
     //host: "0.0.0.0",
     port: 8080,
     hot: false,
     inline: false,
     liveReload: false
-    //inline: false,
-    /*
-    proxy: [{
-      path: `/api/*`,
-      target: 'http://localhost:8082'
-    }, {
-      path: `/ext/*`,
-      target: 'http://localhost:8082'
-    }],
-    */
   }
 };
