@@ -10,6 +10,9 @@ export default class Player {
     //this.character = wop.scene.physics.add.sprite(x, y, 'anime');
     //this.character.anims.play('anime_right');
 
+    this.character.setBounce(0, 0);
+    this.character.setCollideWorldBounds(true);
+
     this.nameText = wop.scene.add.text(x, y, name, {
       fontFamily: 'Arial',
       color: isMe ? 'yellow' : 'white'
