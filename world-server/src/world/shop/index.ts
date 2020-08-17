@@ -1,1 +1,1 @@
-export { ShopItem } from './ShopItem';
+export { ShopItem, ITEM_TYPE } from './ShopItem';
