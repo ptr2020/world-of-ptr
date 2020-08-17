@@ -1,7 +1,6 @@
 import { Vector2 } from "./Math";
 
 export interface WorldTile extends Object {  
-    position: Vector2,
     tileType: Number
 }
 

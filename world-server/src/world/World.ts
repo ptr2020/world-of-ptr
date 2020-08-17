@@ -14,7 +14,7 @@ export class World {
     // that will be available for purchase
     public shopItems: ShopItem[];
     // This should be populated according to the seed
-    public worldTiles: WorldTile[];
+    public worldTiles: WorldTile[][];
 
     public gameTime: Number;
     // List of players sorted by descending score
