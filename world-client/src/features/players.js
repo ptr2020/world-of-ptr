@@ -8,7 +8,6 @@ export default class Players extends Feature {
 
     // Preload game resources here
     wop.scene.load.image('arrow', 'resources/arrow.png');
-
   }
 
   create(wop) {
@@ -50,7 +49,9 @@ export default class Players extends Feature {
       case "player.move":
         // Move the player
         let player = wop.state.getPlayers().find((x) => x.id === message.id);
-        //console.log(player);
+        if (!player)
+          return;
+
         player.character.x = message.pos.x;
         player.character.y = message.pos.y;
         player.character.body.setVelocity(message.vel.x, message.vel.y);
