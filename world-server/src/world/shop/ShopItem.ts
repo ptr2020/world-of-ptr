@@ -1,15 +1,15 @@
 export class ShopItem extends Object {
-    public name: String;
-    public cost: Number;
-    public itemType: Number;
+    public name: string;
+    public cost: number;
+    public itemType: number;
     // How much the item will upgrade something
-    public itemTypeValue: Number;
-    constructor(name: String, cost: Number, itemType: Number, itemTypeValue: Number){
+    public itemTypeValue: number;
+    constructor(name: string, cost: number, itemType: number, itemTypeValue: number){
         super();
         this.name = name;
         this.cost = cost;
         this.itemType = itemType;
-        this.itemTypeValue;
+        this.itemTypeValue = itemTypeValue;
     }
 }
 

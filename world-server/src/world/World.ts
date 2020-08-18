@@ -6,24 +6,24 @@ import { WorldTile } from "./WorldTile";
 import { randomBytes } from "crypto";
 
 export class World {
-    public players: Player[];
-    public monsters: Monster[];
-    public pickups: Pickup[];
-    public monsterSpawners: MonsterSpawner[];
+    public players: Player[] = [];
+    public monsters: Monster[] = [];
+    public pickups: Pickup[] = [];
+    public monsterSpawners: MonsterSpawner[] = [];
 
     // This should be populated at the start of the game with all the items
     // that will be available for purchase
-    public shopItems: ShopItem[];
+    public shopItems: ShopItem[] = [];
     // This should be populated according to the seed
-    public worldTiles: WorldTile[][];
+    public worldTiles: WorldTile[][] = [];
 
     // The time left in the game in seconds
-    public gameTime: Number;
+    public gameTime: number = 0;
     // List of players sorted by descending score
-    public scoreboard: String[];
-    public gameSeed: Number;
+    public scoreboard: string[] = [];
+    public gameSeed: number = 0;
 
-    constructor(gameTime: Number){
+    constructor(gameTime: number){
         this.gameTime = gameTime
     }
 

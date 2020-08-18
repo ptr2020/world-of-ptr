@@ -1,7 +1,7 @@
 export interface Weapon {
-    firerate: Number,
-    damage: Number,
-    bulletSize: Number,
-    bulletSpread: Number,
-    texture: String
+    firerate: number,
+    damage: number,
+    bulletSize: number,
+    bulletSpread: number,
+    texture: string
 }

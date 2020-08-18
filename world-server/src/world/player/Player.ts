@@ -1,27 +1,28 @@
 import { Entity } from "../Entity";
 import { Vector2 } from "../Math";
 import { Weapon } from "./Weapon";
+import { ShopItem } from "../shop";
 
 export class Player extends Entity {
-    public health: Number;
-    public maxHealth: Number;
-    public name: String;
-    public speed: Number;
-    public coins: Number;
+    public health: number;
+    public maxHealth: number;
+    public name: string;
+    public speed: number;
+    public coins: number;
     public weapon: Weapon;
-    public score: Number = 0;
-    public direction: Number = 0;
+    public score: number = 0;
+    public direction: number = 0;
 
     // PLACEHOLDER UNTIL IT IS DECIDED HOW WE DIFFERENTIATE THE PLAYERS
-    public texture;
+    public texture = 'PLACEHOLDER';
 
     constructor(
-        id: Number,
+        id: number,
         position: Vector2 = { x: 0, y: 0 },
-        name: String = "Player",
-        maxHealth: Number = 100,
-        speed: Number = 10,
-        coins: Number = 100,
+        name: string = "Player",
+        maxHealth: number = 100,
+        speed: number = 10,
+        coins: number = 100,
         weapon: Weapon = {
             firerate: 10,
             damage: 20,
@@ -37,5 +38,45 @@ export class Player extends Entity {
         this.speed = speed;
         this.coins = coins;
         this.weapon = weapon;
+    }
+
+    addScore(score: number){
+        this.score += score;
+    }
+
+    addHealth(health: number){
+        this.health += health;
+        this.checkHealth();
+    }
+
+    addCoins(coins: number){
+        if(this.coins + coins >= 0){
+            this.coins += coins;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    respawn(){
+        // TODO: respawn logic
+    }
+
+    die(){
+        // TODO: dying logic
+    }
+
+    checkHealth(){
+        if(this.health <= 0){
+            this.die()
+        }
+    }
+
+    shoot(){
+        // TODO: shooting logic
+    }
+
+    buyItem(item: ShopItem){
+        // Buying logic
     }
 }

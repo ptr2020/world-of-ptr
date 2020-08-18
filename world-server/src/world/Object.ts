@@ -1,3 +1,3 @@
-export abstract class Object {
-    public id: Number;
+export abstract class GameObject {
+    public id: number = 0;
 }

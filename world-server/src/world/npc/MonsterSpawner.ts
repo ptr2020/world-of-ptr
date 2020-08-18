@@ -4,22 +4,22 @@ import { Vector2 } from "../Math";
 
 export class MonsterSpawner extends Entity {
     public monsterType: MonsterType;
-    public spawnRate: Number;
-    public spawnRadius: Number;
+    public spawnRate: number;
+    public spawnRadius: number;
     // The radius that the monsters spawned from the spawner can operate in
-    public influenceRadius: Number;
-    public maxMonsters: Number;
-    public currentMonsters: Number;
+    public influenceRadius: number;
+    public maxMonsters: number;
+    public currentMonsters: number;
 
     constructor(
-        id: Number,
+        id: number,
         position: Vector2,
         monsterType: MonsterType,
-        spawnRate: Number,
-        spawnRadius: Number,
-        influenceRadius: Number,
-        maxMonsters: Number,
-        currentMonsters: Number
+        spawnRate: number,
+        spawnRadius: number,
+        influenceRadius: number,
+        maxMonsters: number,
+        currentMonsters: number
     ) {
         super(id, position);
         this.monsterType = monsterType;

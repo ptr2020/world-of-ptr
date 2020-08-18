@@ -2,9 +2,9 @@ import { Entity } from "../Entity";
 import { Vector2 } from "../Math";
 
 export class Pickup extends Entity {
-    public scoreOnPickup: Number;
+    public scoreOnPickup: number;
 
-    constructor(id: Number, position: Vector2, scoreOnPickup: Number = 100){
+    constructor(id: number, position: Vector2, scoreOnPickup: number = 100){
         super(id, position);
         this.scoreOnPickup = scoreOnPickup;
     }

@@ -1,13 +1,13 @@
 import { Pickup } from "../pickup";
 
 export interface MonsterType {
-    name: String,
-    damage: Number, 
-    maxHealth: Number,
-    speed: Number,
-    scoreWorth: Number
-    targerDetectionRange: Number,
+    name: string,
+    damage: number, 
+    maxHealth: number,
+    speed: number,
+    scoreWorth: number
+    targerDetectionRange: number,
     dropPickupUponDeath: Boolean,
-    texture: String,
+    texture: string,
     dropPickup?: Pickup
 }

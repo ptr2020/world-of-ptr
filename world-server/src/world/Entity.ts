@@ -1,12 +1,12 @@
 import { Vector2 } from "./Math";
-import { Object } from "./Object";
+import { GameObject } from "./Object";
 
-export abstract class Entity extends Object {
-    public id: Number;
+export abstract class Entity extends GameObject {
+    public id: number;
     public position: Vector2;
     public velocity: Vector2;
 
-    constructor(id: Number, position: Vector2, velocity: Vector2 = {x: 0, y: 0}) {
+    constructor(id: number, position: Vector2, velocity: Vector2 = {x: 0, y: 0}) {
         super();
         this.position = position;
         this.velocity = velocity;

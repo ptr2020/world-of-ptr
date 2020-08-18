@@ -1,7 +1,7 @@
 import { Vector2 } from "./Math";
 
 export interface WorldTile extends Object {  
-    tileType: Number
+    tileType: number
 }
 
 // THIS TILE TYPES ENUMERATOR SHOULD BE USED TO DETERMINE THE TILE TYPE
