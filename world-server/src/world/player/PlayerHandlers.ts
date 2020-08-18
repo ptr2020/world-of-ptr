@@ -31,11 +31,6 @@ export class PlayerHandler implements Messages.MsgHandler {
         }
 
         let player = this.players.find(p => p.id == message.id);
-        if (player == null || player == undefined) {
-            Logger.error(`Player ${message.id} not found`);
-            return;
-        }
-
         switch (message.type) {
             case 'player.join':
                 let joinMessage = message as PlayerJoinMessage;
@@ -63,14 +58,14 @@ export class PlayerHandler implements Messages.MsgHandler {
             case 'player.move':
                 let moveMsg = message as PlayerMoveMessage;
                 // In reality, server should validate received pos with it's own and send back corrections
-                player.position = { x: moveMsg.pos.x, y: moveMsg.pos.y };
-                player.velocity = { x: moveMsg.vel.x, y: moveMsg.vel.y };
+                player!.position = { x: moveMsg.pos.x, y: moveMsg.pos.y };
+                player!.velocity = { x: moveMsg.vel.x, y: moveMsg.vel.y };
                 Router.emit(new BroadcastMessage(moveMsg));
                 break;
 
             case 'player.leave':
                 let leaveMessage = message as PlayerLeaveMessage;
-                let index = this.players.indexOf(player);
+                let index = this.players.indexOf(player!);
                 if (index < 0) {
                     Logger.error(`Player ${leaveMessage.id!} trying to leave but server doesn't know this player`);
                     break;

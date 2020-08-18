@@ -13,7 +13,7 @@ export class Server implements Messages.MsgHandler {
     private sockets: websocket.connection[];
 
     constructor(port: number = 8080) {
-        this.connCounter = 0;
+        this.connCounter = 1;
         this.sockets = [];
 
          this.httpServer = http.createServer((req, resp) => {

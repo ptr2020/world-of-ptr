@@ -4,7 +4,7 @@ WORKDIR /srv/world-of-ptr
 COPY . .
 
 RUN yarn install && \
-    yarn server build
+    yarn build
 
 ENV NODE_ENV=production
 EXPOSE 8080
