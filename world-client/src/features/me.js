@@ -8,6 +8,7 @@ export default class Me extends Feature {
 
     // Preload game resources here
     wop.scene.load.image('arrow', 'resources/arrow.png');
+    wop.scene.load.image('bullet', 'resources/bullet5.png');
 
     wop.scene.load.atlas('gems', 'resources/gems.png', 'resources/gems.json');
     wop.scene.load.atlas('anime', 'resources/anime.png', 'resources/anime.json');

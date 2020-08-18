@@ -5,10 +5,13 @@ export default class Player {
     this.name = name;
     this.angle = angle;
 
-    this.character = wop.scene.physics.add.image(x, y, 'arrow');
+    this.character = wop.scene.physics.add.image(x, y, 'bullet');
 
     //this.character = wop.scene.physics.add.sprite(x, y, 'anime');
     //this.character.anims.play('anime_right');
+
+    this.character.setBounce(0, 0);
+    this.character.setCollideWorldBounds(true);
 
     this.nameText = wop.scene.add.text(x, y, name, {
       fontFamily: 'Arial',
