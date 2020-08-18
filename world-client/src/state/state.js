@@ -3,6 +3,10 @@
  * To vključuje druge igralce, svet, pickupe, artikli v trgovini, itd.
  * V drugih funkcijah lahko do tega dostopate z wop.state.______
  * Če karkoli dodajate v ta class pa do state dostopate z this.state.______
+ * 
+ * Če hočete dodati karkšnokoli spremenljivko v state, jo dodajte v constructor
+ * funkciji, kjer piše this.state = {
+ * ne pozabiti vejice, ko dodajate novo spremenljivko :)
  */
 
 export default class State {
