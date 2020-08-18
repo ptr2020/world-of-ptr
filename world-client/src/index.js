@@ -40,11 +40,6 @@ var mockJaka = false;
 if (mockJaka) {
   setTimeout(() => {
     if (wop.socket.isConnected()) {
-      // player.join - Pošljemo v resnici samo
-      //wop.socket.send({
-      //  type: "player.join",
-      //  name: "Duhec",
-      //});
 
       wop.socket.send({
         type: "player.join",
@@ -59,14 +54,6 @@ if (mockJaka) {
         name: "Jaka",
       });
 
-
-      // player.move - Pošljemo v resnici samo
-      //wop.socket.send({
-      //  type: "player.move",
-      //  pos: { x: 100, y: 200 },
-      //  vel: { x: 5, y: 5 },
-      //});
-
       var jakaX = 200, jakaY = 300;
       var velX = 0, velY = 7;
       var perSecs = 10;
@@ -78,8 +65,7 @@ if (mockJaka) {
 
         var vector = new Phaser.Math.Vector2(velX, velY);
         vector.rotate(-Math.PI/50);
-        //velX = velX + Math.random() -0.5;
-        //velY = velY + Math.random() -0.5;
+
         velX = vector.x;
         velY = vector.y;
 

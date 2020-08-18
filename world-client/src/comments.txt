@@ -1,0 +1,38 @@
+index.js:43
+      // player.join - Pošljemo v resnici samo
+      //wop.socket.send({
+      //  type: "player.join",
+      //  name: "Duhec",
+      //});
+
+index.js:56
+      // player.move - Pošljemo v resnici samo
+      //wop.socket.send({
+      //  type: "player.move",
+      //  pos: { x: 100, y: 200 },
+      //  vel: { x: 5, y: 5 },
+      //});
+
+index.js:68
+        //velX = velX + Math.random() -0.5;
+        //velY = velY + Math.random() -0.5;
+
+create.js:16
+//var bg = this.add.image(1920/2 +160, 1920/2 +160, 'grassA01');
+    //bg.setScale(3, 3);
+
+create.js:17
+// Blocks for fun
+    /*
+    wop.blocks = [];
+    for (var i = 0; i < 100; i++) {
+      var block = this.physics.add.image(400 + i * 24, 300, 'block');
+      block.scale = 0.25;
+      wop.blocks.push(block);
+    }
+    */
+
+player.js:9
+    //this.character = wop.scene.physics.add.sprite(x, y, 'anime');
+    //this.character.anims.play('anime_right');
+
