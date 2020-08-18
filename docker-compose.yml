@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  backend:
+    build: "."
+    environment:
+      VIRTUAL_HOST: "world-server.ptr.si"
+      VIRTUAL_PORT: "8080"
+      LETSENCRYPT_HOST: "world-server.ptr.si"
+    network_mode: "bridge"
+
+  frontend:
+    build: world-client
+    environment:
+      VIRTUAL_HOST: "world.ptr.si"
+      LETSENCRYPT_HOST: "world.ptr.si"
+    network_mode: "bridge"
+
+networks:
+  default:
+    external:
+      name: bridge

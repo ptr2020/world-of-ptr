@@ -39,13 +39,12 @@ export class Server implements Messages.MsgHandler {
     }
 
     private onRequestConnection(request) {
-        // TODO
-        // if (!originIsAllowed(request.origin)) {
-        //   // Make sure we only accept requests from an allowed origin
-        //   request.reject();
-        //   // LOG HERE
-        //   return;
-        // }
+        // In production always validate origin
+        if (process.env.NODE_ENV === 'production' && request.origin !== 'https://world.ptr.si') {
+            Logger.warn(`Rejected connection from ${request.remoteAddress} because of Origin`, { origin: request.origin });
+            request.reject();
+            return;
+        }
 
         var connection = request.accept('', request.origin);
         Logger.info(`Accepted socket connection from ${request.remoteAddress}`)
