@@ -71,9 +71,15 @@ export class Server implements Messages.MsgHandler {
             }
         });
 
+        const _this = this;
         connection.on('close', function (_reasonCode: any, _description: any) {
+            const idx = _this.sockets.findIndex(x => x.internalId == this.internalId);
+            if (idx < 0) {
+                Logger.warn(`Tried to close non existing connection with id ${this.internalId}`);
+            }
+            _this.sockets.splice(idx, 1);
             Logger.info(`Closed connection with ${this.remoteAddress}`);
-            Router.emit(new BroadcastMessage(new PlayerLeaveMessage(connection.internalId)));
+            Router.emit(new PlayerLeaveMessage(connection.internalId));
         });
     }
 
@@ -108,7 +114,7 @@ export class Server implements Messages.MsgHandler {
             return;
         }
 
-        clientSocket.sendUTF(msg.msg);
+        clientSocket.sendUTF(JSON.stringify(msg.msg));
     }
 
     // Send out message to all connected clients
