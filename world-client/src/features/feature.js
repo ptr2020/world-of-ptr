@@ -1,6 +1,13 @@
 /**
  * OPOZORILO: V TO DATOTEKO NE NIČ PISATI!
  * 
+ * To je neke vrste načrt za pisanje novih "featurjev"
+ * To datoteko lahko prekopirate, spremenite ime in spremenite
+ * 
+ * export default class Feature ---> export default class ImeDatoteke extends Feature
+ * 
+ * in lahko začnete razvijati svoj feature
+ * 
  * Pojasnilo za vse funkcije v tej mapi:
  * 
  * preload(wop):
@@ -20,6 +27,10 @@
  * onSocketMessage(wop, message):
  * Ta funkcija se izvede, ko dobimo sporočilo od serverja, da se je nekaj spremenilo
  * Logika za backend načeloma gre sem.
+ * 
+ * 
+ * Seveda, lahko ustvarite dodatne funkcije in spremenljivke, ki vam bodo pomagale 
+ * z delovanjem igre
  */
 
 export default class Feature {
