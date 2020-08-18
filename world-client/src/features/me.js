@@ -118,7 +118,7 @@ export default class Me extends Feature {
     super.onSocketMessage(wop, message);
 
     // On server message received logic here
-    if (message.type == 'player.join' && message.correlationToken == wop.me.correlationToken) {
+    if (message.type == 'player.join' && message.correlationToken == (wop.me || {}).correlationToken) {
       wop.me.id = message.id;
       wop.me.name = message.name;
       wop.me.nameText.setText(message.name);
