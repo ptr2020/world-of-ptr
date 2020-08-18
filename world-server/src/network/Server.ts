@@ -3,6 +3,7 @@ import * as websocket from 'websocket';
 import { Logger, Messages, Router } from 'world-core';
 
 import { SendMessage, BroadcastMessage } from './NetworkMessages';
+import { PlayerLeaveMessage } from '../world/player';
 
 export class Server implements Messages.MsgHandler {
     private wsServer: websocket.server;
@@ -72,6 +73,7 @@ export class Server implements Messages.MsgHandler {
 
         connection.on('close', function (_reasonCode: any, _description: any) {
             Logger.info(`Closed connection with ${this.remoteAddress}`);
+            Router.emit(new BroadcastMessage(new PlayerLeaveMessage(connection.internalId)));
         });
     }
 

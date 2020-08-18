@@ -47,9 +47,11 @@ export default class Me extends Feature {
 
     // Prepare scene here
     wop.me = new Player(wop, null, null, 300, 200, 0, true);
+    wop.me.correlationToken = (new Date().getMilliseconds()).toString();
     wop.socket.send({
       type: 'player.join',
-      pos: { x: wop.me.character.x, y: wop.me.character.y }
+      pos: { x: wop.me.character.x, y: wop.me.character.y },
+      correlationToken: wop.me.correlationToken
     });
 
     // Bind keyboard
@@ -71,6 +73,7 @@ export default class Me extends Feature {
     // Game frame update logic here
 
     wop.me.update();
+    let currentVel = wop.me.character.body.velocity.clone();
 
     if (wop.keyActions.moveForward.isDown) {
       // moveForward
@@ -94,6 +97,15 @@ export default class Me extends Feature {
       wop.me.angle += 5;
     }
 
+    if (!currentVel.equals(wop.me.character.body.velocity)) {
+      wop.socket.send({
+        type: 'player.move',
+        id: wop.me.id,
+        pos: { x: wop.me.character.x, y: wop.me.character.y },
+        vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y }
+      });
+    }
+
     if (wop.keyActions.gameStop.isDown) {
       wop.game.isRunning = false;
       wop.game.destroy();
@@ -106,9 +118,10 @@ export default class Me extends Feature {
     super.onSocketMessage(wop, message);
 
     // On server message received logic here
-    if ((wop.me.id == null || wop.me.id == undefined) && message.type == 'player.join') {
+    if (message.type == 'player.join' && message.correlationToken == wop.me.correlationToken) {
       wop.me.id = message.id;
       wop.me.name = message.name;
+      wop.me.nameText.setText(message.name);
     }
 
   }
