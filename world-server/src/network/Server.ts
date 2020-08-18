@@ -2,6 +2,8 @@ import * as http from 'http';
 import * as websocket from 'websocket';
 import { Logger, Messages, Router } from 'world-core';
 
+import { SendMessage, BroadcastMessage } from './NetworkMessages';
+
 export class Server implements Messages.MsgHandler {
     private wsServer: websocket.server;
     private httpServer: http.Server;
@@ -10,12 +12,12 @@ export class Server implements Messages.MsgHandler {
     private sockets: websocket.connection[];
 
     constructor() {
-        this.connCounter = 0;
+        this.connCounter = 1;
         this.sockets = [];
     }
 
     public getTypes(): string[] {
-        return ['network.send'];
+        return ['network.send', 'network.broadcast'];
     }
 
     public init(port: number = 8080) {
@@ -80,14 +82,42 @@ export class Server implements Messages.MsgHandler {
 
     // Handle network.send messages to send updates to all clients
     public handle(msg: Messages.Message): void {
-        // TODO: Properly send message, currently only broadcast
-        this.broadcast(msg);
+        switch (msg.type) {
+            case 'network.send':
+                this.send(msg as SendMessage);
+                break;
+
+            case 'network.broadcast':
+                this.broadcast(msg as BroadcastMessage);
+                break;
+        }
+    }
+
+    // Send message to particular client
+    private send(msg: SendMessage): void {
+        if (msg == null || msg == undefined) {
+            Logger.error(`Server received invalid SendMessage`);
+            return;
+        }
+
+        let clientSocket = this.sockets.find(s => s.internalId == msg.clientId);
+        if (clientSocket == null) {
+            Logger.error(`Client '${msg.clientId} for SendMessage not found`);
+            return;
+        }
+
+        clientSocket.sendUTF(msg.msg);
     }
 
     // Send out message to all connected clients
-    private broadcast(msg: Messages.Message): void {
+    private broadcast(msg: BroadcastMessage): void {
+        if (msg == null || msg == undefined) {
+            Logger.error(`Server received invalid BroadcastMessage`);
+            return;
+        }
+
         for (let socket of this.sockets) {
-            socket.sendUTF(JSON.stringify(msg));
+            socket.sendUTF(JSON.stringify(msg.msg));
         }
     }
 }

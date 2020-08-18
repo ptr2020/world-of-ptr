@@ -46,7 +46,11 @@ export default class Me extends Feature {
     });
 
     // Prepare scene here
-    wop.me = new Player(wop, "1", "Duhec", 300, 200, 0, true);
+    wop.me = new Player(wop, null, null, 300, 200, 0, true);
+    wop.socket.send({
+      type: 'player.join',
+      pos: { x: wop.me.character.x, y: wop.me.character.y }
+    });
 
     // Bind keyboard
     var KeyCodes = Phaser.Input.Keyboard.KeyCodes;
@@ -102,6 +106,10 @@ export default class Me extends Feature {
     super.onSocketMessage(wop, message);
 
     // On server message received logic here
+    if ((wop.me.id == null || wop.me.id == undefined) && message.type == 'player.join') {
+      wop.me.id = message.id;
+      wop.me.name = message.name;
+    }
 
   }
 

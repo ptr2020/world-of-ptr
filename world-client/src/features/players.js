@@ -37,15 +37,14 @@ export default class Players extends Feature {
     switch (message.type) {
       case "player.join":
         // Join the player
-        if (message.id !== "12345") {
-          wop.state.addPlayer(new Player(wop, message.id, message.name, message.pos.x, message.pos.y, 0, false));
+        if (wop.me.id == null || wop.me.id == undefined || wop.me.id == message.id) {
+          return;
         }
+        wop.state.addPlayer(new Player(wop, message.id, message.name, message.pos.x, message.pos.y, 0, false));
         break;
       case "player.leave":
         // Remove the player
-        if (message.id !== "12345") {
-          wop.state.removePlayer(message.id);
-        }
+        wop.state.removePlayer(message.id);
         break;
       case "player.move":
         // Move the player
