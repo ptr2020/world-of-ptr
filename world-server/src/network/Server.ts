@@ -2,6 +2,9 @@ import * as http from 'http';
 import * as websocket from 'websocket';
 import { Logger, Messages, Router } from 'world-core';
 
+import { SendMessage, BroadcastMessage } from './NetworkMessages';
+import { PlayerLeaveMessage } from '../world/player';
+
 export class Server implements Messages.MsgHandler {
     private wsServer: websocket.server;
     private httpServer: http.Server;
@@ -33,7 +36,7 @@ export class Server implements Messages.MsgHandler {
     }
 
     public getTypes(): string[] {
-        return ['network.send'];
+        return ['network.send', 'network.broadcast'];
     }
 
     private onRequestConnection(request: websocket.request) {
@@ -70,7 +73,13 @@ export class Server implements Messages.MsgHandler {
         });
 
         connection.on('close', (_reasonCode: any, _description: any) => {
+            const idx = this.sockets.findIndex(x => (<any>x).internalId == (<any>connection).internalId);
+            if (idx < 0) {
+                Logger.warn(`Tried to close non existing connection with id ${(<any>connection).internalId}`);
+            }
+            this.sockets.splice(idx, 1);
             Logger.info(`Closed connection with ${connection.remoteAddress}`);
+            Router.emit(new PlayerLeaveMessage((<any>connection).internalId));
         });
     }
 
@@ -81,14 +90,42 @@ export class Server implements Messages.MsgHandler {
 
     // Handle network.send messages to send updates to all clients
     public handle(msg: Messages.Message): void {
-        // TODO: Properly send message, currently only broadcast
-        this.broadcast(msg);
+        switch (msg.type) {
+            case 'network.send':
+                this.send(msg as SendMessage);
+                break;
+
+            case 'network.broadcast':
+                this.broadcast(msg as BroadcastMessage);
+                break;
+        }
+    }
+
+    // Send message to particular client
+    private send(msg: SendMessage): void {
+        if (msg == null || msg == undefined) {
+            Logger.error(`Server received invalid SendMessage`);
+            return;
+        }
+
+        let clientSocket = this.sockets.find(s => (<any>s).internalId == msg.clientId);
+        if (clientSocket == null) {
+            Logger.error(`Client '${msg.clientId} for SendMessage not found`);
+            return;
+        }
+
+        clientSocket.sendUTF(JSON.stringify(msg.msg));
     }
 
     // Send out message to all connected clients
-    private broadcast(msg: Messages.Message): void {
+    private broadcast(msg: BroadcastMessage): void {
+        if (msg == null || msg == undefined) {
+            Logger.error(`Server received invalid BroadcastMessage`);
+            return;
+        }
+
         for (let socket of this.sockets) {
-            socket.sendUTF(JSON.stringify(msg));
+            socket.sendUTF(JSON.stringify(msg.msg));
         }
     }
 }

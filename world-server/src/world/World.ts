@@ -4,12 +4,17 @@ import { Pickup } from "./pickup";
 import { ShopItem, ITEM_TYPE } from "./shop";
 import { WorldTile } from "./WorldTile";
 import { randomBytes } from "crypto";
+import { PlayerHandler } from './player';
+
+import { Router } from 'world-core';
 
 export class World {
-    public players: Player[] = [];
-    public monsters: Monster[] = [];
-    public pickups: Pickup[] = [];
-    public monsterSpawners: MonsterSpawner[] = [];
+    private playerMsgHandler: PlayerHandler;
+
+    public players: Player[];
+    public monsters: Monster[];
+    public pickups: Pickup[];
+    public monsterSpawners: MonsterSpawner[];
 
     // This should be populated at the start of the game with all the items
     // that will be available for purchase
@@ -24,7 +29,18 @@ export class World {
     public gameSeed: number = 0;
 
     constructor(gameTime: number){
-        this.gameTime = gameTime
+        this.gameTime = gameTime;
+
+        this.players = [];
+        this.monsters = [];
+        this.pickups = [];
+        this.monsterSpawners = [];
+
+        this.shopItems = [];
+        this.worldTiles = [];
+
+        this.playerMsgHandler = new PlayerHandler(this.players);
+        Router.register(this.playerMsgHandler);
     }
 
     init() {

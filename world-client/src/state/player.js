@@ -5,10 +5,10 @@ export default class Player {
     this.name = name;
     this.angle = angle;
 
-    this.character = wop.scene.physics.add.image(x, y, 'arrow');
+    //this.character = wop.scene.physics.add.image(x, y, 'cowboy');
 
-    //this.character = wop.scene.physics.add.sprite(x, y, 'anime');
-    //this.character.anims.play('anime_right');
+    this.character = wop.scene.physics.add.sprite(x, y, 'anime');
+    this.character.anims.play('yeehaw_move');
 
     this.character.setBounce(0, 0);
     this.character.setCollideWorldBounds(true);
@@ -32,6 +32,7 @@ export default class Player {
 
     if (this.character.anims) {
 
+      /*
       if (this.angle > -45 && this.angle <= 45) {
         // right
         if (this.character.anims.currentAnim.key !== 'anime_right')
@@ -49,6 +50,7 @@ export default class Player {
         if (this.character.anims.currentAnim.key !== 'anime_up')
           this.character.anims.play('anime_up');
       }
+      */
 
       if (this.character.body.velocity.length() > 0) {
         this.character.anims.resume();
@@ -58,8 +60,9 @@ export default class Player {
       }
     } else {
 
-      this.character.angle = this.angle;
     }
+    this.character.angle = this.angle;
+
   }
 
   destroy() {

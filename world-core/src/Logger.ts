@@ -4,5 +4,5 @@ export const Logger = logger.createLogger({
     transports: [
         new logger.transports.Console()
     ],
-    level: 'debug'
+    level: 'info'
 });

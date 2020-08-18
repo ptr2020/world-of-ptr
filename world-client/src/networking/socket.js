@@ -4,6 +4,7 @@ export default class Socket {
 
   constructor(wop) {
     this.wop = wop;
+    this.msgQueue = [];
     this.socket = null;
 
     // Settings
@@ -16,13 +17,16 @@ export default class Socket {
     this.socket = new WebSocket(this.host);
 
     this.socket.onopen = (e) => {
-      // TODO
+      for(const msg of this.msgQueue) {
+        this.send(msg);
+      }
+
+      this.msgQueue = undefined;
     };
 
     this.socket.onmessage = (e) => {
       // TODO
       //console.log("Socket onmessage", e);
-
 
       var message = JSON.parse(e.data);
       for (var featureName in features) {
@@ -48,7 +52,12 @@ export default class Socket {
       return false;
     }
 
-    var success = this.socket.send(msg);
+    if (!this.socket.readyState) {
+      this.msgQueue.push(msg);
+    }
+    else {
+      var success = this.socket.send(msg);
+    }
     return success;
   };
 
