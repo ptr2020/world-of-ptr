@@ -9,36 +9,34 @@ export class Server implements Messages.MsgHandler {
     private connCounter: number;
     private sockets: websocket.connection[];
 
-    constructor() {
+    constructor(port: number = 8080) {
         this.connCounter = 0;
         this.sockets = [];
+
+         this.httpServer = http.createServer((req, resp) => {
+             Logger.info(`Invalid request from ${req.connection.remoteAddress}`);
+             resp.writeHead(418);
+             resp.end();
+         });
+
+         this.httpServer.listen(port, () => {
+             Logger.info(`Server listening on ::${port}`);
+         });
+
+         this.wsServer = new websocket.server({
+             httpServer: this.httpServer,
+             autoAcceptConnections: false,
+         });
+
+         this.wsServer.on("request", this.onRequestConnection.bind(this));
+         Router.register(this);
     }
 
     public getTypes(): string[] {
         return ['network.send'];
     }
 
-    public init(port: number = 8080) {
-        this.httpServer = http.createServer((req, resp) => {
-            Logger.info(`Invalid request from ${req.connection.remoteAddress}`);
-            resp.writeHead(418);
-            resp.end()
-        });
-
-        this.httpServer.listen(port, () => {
-            Logger.info(`Server listening on ::${port}`);
-        });
-
-        this.wsServer = new websocket.server({
-            httpServer: this.httpServer,
-            autoAcceptConnections: false
-        });
-
-        this.wsServer.on('request', this.onRequestConnection.bind(this));
-        Router.register(this);
-    }
-
-    private onRequestConnection(request) {
+    private onRequestConnection(request: websocket.request) {
         // In production always validate origin
         if (process.env.NODE_ENV === 'production' && request.origin !== 'https://world.ptr.si') {
             Logger.warn(`Rejected connection from ${request.remoteAddress} because of Origin`, { origin: request.origin });
@@ -47,29 +45,32 @@ export class Server implements Messages.MsgHandler {
         }
 
         var connection = request.accept('', request.origin);
-        Logger.info(`Accepted socket connection from ${request.remoteAddress}`)
+        Logger.info(`Accepted socket connection from ${request.remoteAddress}`);
 
-        connection.internalId = this.connCounter++;
+        // Commented out for now to avoid build errors
+        // the library should do this automatically if debug is enabled
+        // https://github.com/theturtle32/WebSocket-Node/blob/1f7ffba2f7a6f9473bcb39228264380ce2772ba7/lib/WebSocketConnection.js#L42
+        (<any>connection).internalId = this.connCounter++;
         this.sockets.push(connection);
 
-        connection.on('message', function (message: websocket.message) {
+        connection.on('message', (message) => {
             if (message.type === 'utf8') {
-                Logger.debug(`Received message from ${this.remoteAddress}`, { content: message.utf8Data });
+                Logger.debug(`Received message from ${connection.remoteAddress}`, { content: message.utf8Data });
                 try {
-                    let msg = JSON.parse(message.utf8Data) as Messages.Message;
+                    let msg = JSON.parse(message.utf8Data!) as Messages.Message;
                     Router.emit(msg);
                 }
                 catch (e) {
-                    Logger.warn(`Problem parsing message from ${this.remoteAddress}`, { exception: e.toString() });
+                    Logger.warn(`Problem parsing message from ${connection.remoteAddress}`, { exception: e.toString() });
                 }
             }
             else {
-                Logger.warn(`Message from ${this.remoteAddress} not in valid format! Expected 'utf8' got '${message.type}.`);
+                Logger.warn(`Message from ${connection.remoteAddress} not in valid format! Expected 'utf8' got '${message.type}.`);
             }
         });
 
-        connection.on('close', function (_reasonCode: any, _description: any) {
-            Logger.info(`Closed connection with ${this.remoteAddress}`);
+        connection.on('close', (_reasonCode: any, _description: any) => {
+            Logger.info(`Closed connection with ${connection.remoteAddress}`);
         });
     }
 
