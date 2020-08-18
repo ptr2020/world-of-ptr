@@ -2,6 +2,12 @@ import Feature from "./feature";
 import * as Phaser from 'phaser';
 import Player from "../state/player";
 
+/**
+ * To je naš igralec
+ * Vsa logika, ki je pomembna samo za našega igralca je tukaj.
+ * Glej player.js za lastnosti igralca.
+ */
+
 export default class Me extends Feature {
   preload(wop) {
     super.preload(wop);

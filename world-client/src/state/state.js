@@ -1,3 +1,10 @@
+/**
+ * Tale "state" objekt vsebuje čisto vse kar moramo vedeti o stvareh, ki niso igralec
+ * To vključuje druge igralce, svet, pickupe, artikli v trgovini, itd.
+ * V drugih funkcijah lahko do tega dostopate z wop.state.______
+ * Če karkoli dodajate v ta class pa do state dostopate z this.state.______
+ */
+
 export default class State {
 
   constructor(wop) {

@@ -5,12 +5,17 @@ import create from './wop/create';
 import update from './wop/update';
 
 // We'll use wop as a namespace for game objects
+/* Na wop lahko gledate kot nek ogromen objekt, ki vsebuje čisto vse podatke o vsemu
+ Posledično lahko dostopate do česarkoli z wop.______ */
 var wop = {
   debug: {}
 };
 window.wop = wop;
 
 // Prepare Phaser game configuration
+/**
+ * Glavne nastavitve igre, to za vas ni pomembno večino časa
+ */
 var gameConfig = {
   type: Phaser.AUTO,
   width: 1280,
@@ -30,10 +35,20 @@ var gameConfig = {
 };
 
 // Create the game
+/**
+ * Ustvarimo igro in vzpostavimo povezavo z serverjem
+ * To bi načeloma moralo delovati in se ne dotikajte tega
+ */
 wop.game = new Phaser.Game(gameConfig);
-
 wop.socket = new Socket(wop);
 wop.socket.connect();
+
+
+/**
+ * ======================
+ * TESTIRANJE
+ * ======================
+ */
 
 // *** Mock for echo server ***
 var mockJaka = false;

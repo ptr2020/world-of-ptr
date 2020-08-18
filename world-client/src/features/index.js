@@ -4,6 +4,10 @@ import Camera from "./camera";
 import Chat from "./chat";
 import Scoreboard from "./scoreboard";
 
+/**
+ * Registriramo vse "featurje", da jih lahko naložimo ob prižigu igre
+ */
+
 export default {
   me: new Me(),
   players: new Players(),

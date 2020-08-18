@@ -2,6 +2,12 @@ import Feature from "./feature";
 import * as Phaser from 'phaser';
 import Player from "../state/player";
 
+/**
+ * To so vsi igralci, ki niso naš igralec.
+ * Da vidiš vse lastnosti teh igralcev glej player.js
+ * Do vseh igralcev se dostopa z wop.state.getPlayers(), ki vrne seznam vseh igralcev
+ */
+
 export default class Players extends Feature {
   preload(wop) {
     super.preload(wop);

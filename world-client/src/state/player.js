@@ -1,3 +1,11 @@
+/**
+ * To je Player objekt
+ * Tole datoteko si lahko predstavljate kot "načrt" za igralca.
+ * Vsi igralci bodo imeli vse lastnosti, ki jih določimo tukaj:
+ * id, ime, kot, animacije, health,...
+ * TO NI NUJNO NAŠ IGRALEC!! --> glej me.js za igralca, ki se ga upravljati
+ */
+
 export default class Player {
 
   constructor(wop, id, name, x, y, angle, isMe) {

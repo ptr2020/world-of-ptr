@@ -1,5 +1,9 @@
 import features from '../features';
 
+/**
+ * Tale funkcija se načeloma uporablja samo za nalaganje slik in tekstur pred
+ * create(wop) funkcijo.
+ */
 export default function preload(wop) {
   return function() {
 
