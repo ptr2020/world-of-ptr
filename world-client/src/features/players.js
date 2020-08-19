@@ -57,7 +57,9 @@ export default class Players extends Feature {
         player.character.body.setVelocity(message.vel.x, message.vel.y);
 
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);
-        player.angle = (vector.angle()) / (2*Math.PI) * 360;
+        if (vector.length() > 0) {
+          player.angle = (vector.angle()) / (2*Math.PI) * 360;
+        }
        
         break;
     }
