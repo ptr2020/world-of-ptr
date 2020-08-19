@@ -3,6 +3,7 @@ import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
+import { allowedNodeEnvironmentFlags } from 'process';
 
 export class PlayerHandler implements Messages.MsgHandler {
     private players: Player[];
@@ -16,7 +17,18 @@ export class PlayerHandler implements Messages.MsgHandler {
     }
 
     public validate(msg: Messages.Message): boolean {
-        // TODO: Implement some basic validation logic so we don't just blindly accept packets
+        switch (msg.type) {
+            case 'player.changename':
+                let nameMessage = msg as PlayerNameMessage;
+                let newName = nameMessage.name.trim();
+
+                if(newName.length < 3 || newName.length > 20 || !newName.match(/^[\w ]+$/)) {
+                    return false;
+                }
+
+                break;
+        }
+
         return true;
     }
 
@@ -74,8 +86,8 @@ export class PlayerHandler implements Messages.MsgHandler {
 
             case 'player.changename':
                 let nameMessage = message as PlayerNameMessage;
-                player!.name = nameMessage.name;
 
+                player!.name = nameMessage.name.trim();
                 Router.emit(new BroadcastMessage(nameMessage));
                 break;
 

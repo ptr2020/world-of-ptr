@@ -83,13 +83,12 @@ export default class Me extends Feature {
     });
 
     wop.keyActions.change_name.addListener('down', () => {
-        wop.me.name = prompt("Vpiši ime:");
+        let newName = prompt("Vpiši ime:");
         wop.socket.send({
           type: 'player.changename',
           id: wop.me.id,
-          name: wop.me.name,
+          name: newName,
         });
-  
     });
 
   }
