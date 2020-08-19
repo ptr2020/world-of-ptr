@@ -6,6 +6,7 @@ export default class Socket {
     this.wop = wop;
     this.msgQueue = [];
     this.socket = null;
+    this.firstConnect = false;
 
     // Settings
     //this.port = 8081;
@@ -22,6 +23,7 @@ export default class Socket {
       }
 
       this.msgQueue = undefined;
+      this.firstConnect = true;
     };
 
     this.socket.onmessage = (e) => {
@@ -37,6 +39,7 @@ export default class Socket {
     this.socket.onclose = (e) => {
       // TODO
     };
+
   };
 
   isConnected() {
@@ -44,6 +47,10 @@ export default class Socket {
   };
 
   send(msg) {
+    if(!this.isConnected()){
+      if(this.firstConnect) location.reload();
+      else return;
+    }
     if (!msg) return false;
     if (typeof(msg) == "object"){
       msg = JSON.stringify(msg);
