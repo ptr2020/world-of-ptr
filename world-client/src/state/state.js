@@ -2,17 +2,6 @@ import * as SimplexNoise from "simplex-noise";
 import * as random from "random";
 import * as seedrandom from "seedrandom";
 
-/**
- * Tale "state" objekt vsebuje čisto vse kar moramo vedeti o stvareh, ki niso igralec
- * To vključuje druge igralce, svet, pickupe, artikli v trgovini, itd.
- * V drugih funkcijah lahko do state spremenljivke dostopate z wop.state.state.______
- * Če karkoli programirate v tem dokumentu pa do state dostopate z this.state.______
- * 
- * Če hočete dodati karkšnokoli spremenljivko v state, jo dodajte v constructor
- * funkciji, kjer piše this.state = {
- * ne pozabiti vejice, ko dodajate novo spremenljivko :)
- */
-
 export default class State {
 
   constructor(wop) {
