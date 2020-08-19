@@ -6,7 +6,8 @@ import update from './wop/update';
 
 // We'll use wop as a namespace for game objects
 var wop = {
-  debug: {}
+  debug: {},
+  debugMode: false,
 };
 window.wop = wop;
 

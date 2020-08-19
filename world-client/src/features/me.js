@@ -49,7 +49,7 @@ export default class Me extends Feature {
     wop.scene.anims.create({
       key: 'yeehaw_move',
       frames: wop.scene.anims.generateFrameNames('yeehaw', { prefix: 'move_', end: 4, zeroPad: 4 }),
-      frameRate: 10,
+      frameRate: 20,
       repeat: -1,
     });
 
@@ -66,13 +66,19 @@ export default class Me extends Feature {
     // Bind keyboard
     var KeyCodes = Phaser.Input.Keyboard.KeyCodes;
     wop.keyActions = wop.scene.input.keyboard.addKeys({
-      moveForward: KeyCodes.W,
-      moveBack: KeyCodes.S,
-      turnLeft: KeyCodes.A,
-      turnRight: KeyCodes.D,
-      shift: KeyCodes.SHIFT,
+      moveForward: KeyCodes.UP, moveForwardAlt: KeyCodes.W,
+      moveBack: KeyCodes.DOWN, moveBackAlt: KeyCodes.S,
+      turnLeft: KeyCodes.LEFT, turnLeftAlt: KeyCodes.A,
+      turnRight: KeyCodes.RIGHT, turnRightAlt: KeyCodes.D,
+      sprint: KeyCodes.SHIFT,
 
+      toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
+    });
+
+
+    wop.keyActions.toggleDebug.addListener('down', () => {
+      wop.debugMode = !wop.debugMode;
     });
 
   }
@@ -84,44 +90,39 @@ export default class Me extends Feature {
 
     wop.me.update();
     let currentVel = wop.me.character.body.velocity.clone();
+
+    // Prepare move vector
     var sprint = false;
-    if (wop.keyActions.moveForward.isDown) {
+    if (wop.keyActions.sprint.isDown && !wop.keyActions.turnLeft.isDown && !wop.keyActions.turnRight.isDown) {
+      // Sprint enabled
+      sprint = true;
+    }
+
+
+    if (wop.keyActions.moveForward.isDown || wop.keyActions.moveForwardAlt.isDown) {
       // moveForward
-      var vector = new Phaser.Math.Vector2(200, 0);
-      if (wop.keyActions.shift.isDown) {
-        //sprint
-        vector = new Phaser.Math.Vector2(350, 0);
-        sprint = true;
-      }
-      if (wop.keyActions.shift.isUp){
-        sprint = false;
-      }
-      if (wop.keyActions.turnLeft.isDown) {
-        sprint = false;
-      }
-      if (wop.keyActions.turnRight.isDown) {
-        sprint = false;
-      }
-      if (sprint == false){
-        vector = new Phaser.Math.Vector2(200, 0);
-      }
+      var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
+      if (sprint) vector.scale(wop.me.sprintSpeedFactor);
       vector.rotate(wop.me.angle/180*Math.PI);
       wop.me.character.body.velocity = vector;
-    } else if (wop.keyActions.moveBack.isDown) {
+    } else if (wop.keyActions.moveBack.isDown || wop.keyActions.moveBackAlt.isDown) {
       // moveBack
-      var vector = new Phaser.Math.Vector2(-150, 0);
-      vector.rotate(wop.me.angle/180*Math.PI);
+      var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
+      if (sprint) vector.scale(wop.me.sprintSpeedFactor);
+      vector.scale(wop.me.backwardsSpeedFactor);
+      vector.rotate(wop.me.angle/180*Math.PI + Math.PI);
       wop.me.character.body.velocity = vector;
     } else {
       wop.me.character.body.setVelocity(0, 0);
     }
-    if (wop.keyActions.turnLeft.isDown) {
+
+    if (wop.keyActions.turnLeft.isDown || wop.keyActions.turnLeftAlt.isDown) {
       // turnLeft
-      wop.me.angle -= 5;
+      wop.me.angle -= wop.me.turnSpeed;
     }
-    if (wop.keyActions.turnRight.isDown) {
+    if (wop.keyActions.turnRight.isDown || wop.keyActions.turnRightAlt.isDown) {
       // turnRight
-      wop.me.angle += 5;
+      wop.me.angle += wop.me.turnSpeed;
     }
 
     if (!currentVel.equals(wop.me.character.body.velocity)) {
@@ -147,8 +148,7 @@ export default class Me extends Feature {
     // On server message received logic here
     if (message.type == 'player.join' && message.correlationToken == (wop.me || {}).correlationToken) {
       wop.me.id = message.id;
-      wop.me.name = message.name;
-      wop.me.nameText.setText(message.name);
+      wop.me.setName(message.name);
     }
 
   }

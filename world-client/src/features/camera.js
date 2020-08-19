@@ -20,7 +20,7 @@ export default class Camera extends Feature {
 
     var roundPixels = false;
     wop.scene.cameras.main.startFollow(wop.me.character, roundPixels, 0.08, 0.08);
-    wop.scene.cameras.main.setZoom(1.5);
+    wop.scene.cameras.main.setZoom(2);
   }
 
   update(wop) {

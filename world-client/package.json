@@ -21,6 +21,8 @@
   "dependencies": {
     "crypto-random-string": "^3.2.0",
     "phaser": "^3.24.1",
+    "random": "^2.2.0",
+    "simplex-noise": "^2.4.0",
     "webpack": "^4.44.1"
   }
 }

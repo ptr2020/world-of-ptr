@@ -4,31 +4,57 @@ export default class Player {
     this.id = id;
     this.name = name;
     this.angle = angle;
+    this.defaultSpeed = 120;
+    this.sprintSpeedFactor = 1.6;
+    this.backwardsSpeedFactor = 0.6;
+    this.speed = this.defaultSpeed;
+    this.turnSpeed = 5;
 
-    //this.character = wop.scene.physics.add.image(x, y, 'cowboy');
+    this.isMe = isMe;
+    this.standingOn = "";
 
-    this.character = wop.scene.physics.add.sprite(x, y, 'anime');
+    //this.character = wop.scene.physics.add.image(x, y, 'arrow');
+    //this.character.setScale(0.5, 0.5);
+
+    this.character = wop.scene.physics.add.sprite(x, y, 'yeehaw');
+    this.character.setScale(0.5, 0.5);
     this.character.anims.play('yeehaw_move');
 
     this.character.setBounce(0, 0);
     this.character.setCollideWorldBounds(true);
+    this.character.body.onOverlap = true;
+
 
     this.nameText = wop.scene.add.text(x, y, name, {
       fontFamily: 'Arial',
+      fontSize: 16,
       color: isMe ? 'yellow' : 'white'
     });
+    this.nameText.depth = 50;
+
+    this.debugText = wop.scene.add.text(x, y, name, {
+      fontFamily: 'Arial',
+      color: 'white',
+      fontSize: 12,
+      align: 'center',
+    });
+    this.nameText.depth = 40;
 
     this.update();
   }
 
+  setName(name) {
+    this.name = name;
+    this.nameText.setText(name);
+  }
+
   update() {
-    // Position name text over player's character
-    this.nameText.x = this.character.x -this.nameText.width/2;
-    this.nameText.y = this.character.y -this.character.height/2 -20;
 
     // Normalize angle
     if (this.angle > 180) this. angle -= 360;
     if (this.angle < -180) this. angle += 360;
+
+    this.character.angle = this.angle;
 
     if (this.character.anims) {
 
@@ -61,7 +87,23 @@ export default class Player {
     } else {
 
     }
-    this.character.angle = this.angle;
+
+    // Position name text over player's character
+    this.nameText.x = this.character.x -this.nameText.width/2;
+    this.nameText.y = this.character.y -this.character.height*0.75;
+
+    // Update debugText
+    var showDebugText = this.isMe && wop.debugMode;
+    this.debugText.visible = showDebugText;
+    if (showDebugText) {
+      this.debugText.x = this.character.x -this.debugText.width/2;
+      this.debugText.y = this.character.y +this.character.height/2;
+      this.debugText.setText(
+        "Pos: "+Math.round(this.character.x)+", "+Math.round(this.character.y)+"\n"+
+        "Angle: "+Math.round(this.character.angle)+"\n"+
+        "On: "+this.standingOn
+      );
+    }
 
   }
 
