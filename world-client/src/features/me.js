@@ -2,6 +2,8 @@ import Feature from "./feature";
 import * as Phaser from 'phaser';
 import Player from "../state/player";
 
+import * as cryptoRandomString from 'crypto-random-string';
+
 export default class Me extends Feature {
   preload(wop) {
     super.preload(wop);
@@ -56,7 +58,7 @@ export default class Me extends Feature {
 
     // Prepare scene here
     wop.me = new Player(wop, null, null, 300, 200, 0, true);
-    wop.me.correlationToken = (new Date().getMilliseconds()).toString();
+    wop.me.correlationToken = cryptoRandomString({ length: 10 });
     wop.socket.send({
       type: 'player.join',
       pos: { x: wop.me.character.x, y: wop.me.character.y },

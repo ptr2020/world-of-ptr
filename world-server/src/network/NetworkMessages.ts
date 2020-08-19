@@ -2,10 +2,10 @@ import { Messages } from 'world-core';
 
 export class SendMessage implements Messages.Message {
     public type: string;
-    public clientId: number;
+    public clientId: string;
     public msg: Messages.Message;
 
-    constructor(clientId: number, message: Messages.Message) {
+    constructor(clientId: string, message: Messages.Message) {
         this.type = 'network.send';
         this.msg = message;
         this.clientId = clientId;

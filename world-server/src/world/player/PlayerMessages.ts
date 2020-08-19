@@ -2,12 +2,12 @@ import { Messages } from 'world-core';
 import { Vector2 } from '../Math';
 
 export abstract class PlayerMessage implements Messages.Message {
-    public id?: number;
+    public id?: string;
     public type!: string;
 }
 
 export class PlayerJoinMessage extends PlayerMessage {
-    constructor(id: number, name: string, pos: Vector2) {
+    constructor(id: string, name: string, pos: Vector2) {
         super();
 
         this.type = 'player.join';
@@ -21,7 +21,7 @@ export class PlayerJoinMessage extends PlayerMessage {
 }
 
 export class PlayerMoveMessage extends PlayerMessage {
-    constructor(id: number, pos: Vector2, vel: Vector2) {
+    constructor(id: string, pos: Vector2, vel: Vector2) {
         super();
         
         this.type = 'player.move';
@@ -35,7 +35,7 @@ export class PlayerMoveMessage extends PlayerMessage {
 }
 
 export class PlayerLeaveMessage extends PlayerMessage {
-    constructor(id: number) {
+    constructor(id: string) {
         super();
         
         this.type = 'player.leave';

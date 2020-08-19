@@ -17,7 +17,7 @@ export class Player extends Entity {
     public texture = 'PLACEHOLDER';
 
     constructor(
-        id: number,
+        id: string,
         position: Vector2 = { x: 0, y: 0 },
         name: string = "Player",
         maxHealth: number = 100,

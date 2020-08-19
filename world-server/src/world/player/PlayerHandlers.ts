@@ -3,15 +3,12 @@ import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
-import { join } from 'path';
 
 export class PlayerHandler implements Messages.MsgHandler {
     private players: Player[];
-    private nextId: number;
 
     constructor(players: Player[]) {
         this.players = players;
-        this.nextId = 1;
     }
 
     public getTypes(): string[] {
@@ -30,12 +27,12 @@ export class PlayerHandler implements Messages.MsgHandler {
             return;
         }
 
-        let player = this.players.find(p => p.id == message.id);
+        let player = this.players.find(p => p.id == msg.clientId!);
         switch (message.type) {
             case 'player.join':
                 let joinMessage = message as PlayerJoinMessage;
 
-                joinMessage.id = this.nextId++;
+                joinMessage.id = msg.clientId!;
                 joinMessage.name = `Player ${joinMessage.id}`;
 
                 // Notify everybody else that player joined
