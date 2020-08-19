@@ -1,5 +1,5 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
@@ -12,7 +12,7 @@ export class PlayerHandler implements Messages.MsgHandler {
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move'];
+        return ['player.join', 'player.leave', 'player.move', 'player.changename'];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -71,6 +71,14 @@ export class PlayerHandler implements Messages.MsgHandler {
                 this.players.splice(index, 1);
                 Router.emit(new BroadcastMessage(message));
                 break;
+
+            case 'player.changename':
+                let nameMessage = message as PlayerNameMessage;
+                player!.name = nameMessage.name;
+
+                Router.emit(new BroadcastMessage(nameMessage));
+                break;
+
         }
     }
 

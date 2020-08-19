@@ -34,7 +34,7 @@ export default class Players extends Feature {
 
     // On server message received logic here
     switch (message.type) {
-      case "player.join":
+      case 'player.join':
         // Join the player
         if (message.correlationToken == wop.me.correlationToken) {
           return;
@@ -42,11 +42,11 @@ export default class Players extends Feature {
 
         wop.state.addPlayer(new Player(wop, message.id, message.name, message.pos.x, message.pos.y, 0, false));
         break;
-      case "player.leave":
+      case 'player.leave':
         // Remove the player
         wop.state.removePlayer(message.id);
         break;
-      case "player.move":
+      case 'player.move':
         // Move the player
         let player = wop.state.getPlayers().find((x) => x.id === message.id);
         if (!player)
@@ -61,6 +61,14 @@ export default class Players extends Feature {
           player.angle = (vector.angle()) / (2*Math.PI) * 360;
         }
        
+        break;
+      case 'player.changename':
+        if (message.id != wop.me.id) {
+          let player = wop.state.getPlayers().find((x) => x.id === message.id);
+          if (!player)
+            return;
+          player.setName(message.name);
+        }
         break;
     }
   }

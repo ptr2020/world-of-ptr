@@ -73,14 +73,23 @@ export default class Me extends Feature {
       turnLeft: KeyCodes.LEFT, turnLeftAlt: KeyCodes.A,
       turnRight: KeyCodes.RIGHT, turnRightAlt: KeyCodes.D,
       sprint: KeyCodes.SHIFT,
-
+      change_name: KeyCodes.N,
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
     });
 
-
     wop.keyActions.toggleDebug.addListener('down', () => {
       wop.debugMode = !wop.debugMode;
+    });
+
+    wop.keyActions.change_name.addListener('down', () => {
+        wop.me.name = prompt("Vpiši ime:");
+        wop.socket.send({
+          type: 'player.changename',
+          id: wop.me.id,
+          name: wop.me.name,
+        });
+  
     });
 
   }
@@ -89,7 +98,6 @@ export default class Me extends Feature {
     super.update(wop);
 
     // Game frame update logic here
-
     wop.me.update();
     let currentVel = wop.me.character.body.velocity.clone();
 
@@ -100,19 +108,18 @@ export default class Me extends Feature {
       sprint = true;
     }
 
-
     if (wop.keyActions.moveForward.isDown || wop.keyActions.moveForwardAlt.isDown) {
       // moveForward
       var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
       if (sprint) vector.scale(wop.me.sprintSpeedFactor);
-      vector.rotate(wop.me.angle/180*Math.PI);
+      vector.rotate(wop.me.angle / 180 * Math.PI);
       wop.me.character.body.velocity = vector;
     } else if (wop.keyActions.moveBack.isDown || wop.keyActions.moveBackAlt.isDown) {
       // moveBack
       var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
       if (sprint) vector.scale(wop.me.sprintSpeedFactor);
       vector.scale(wop.me.backwardsSpeedFactor);
-      vector.rotate(wop.me.angle/180*Math.PI + Math.PI);
+      vector.rotate(wop.me.angle / 180 * Math.PI + Math.PI);
       wop.me.character.body.velocity = vector;
     } else {
       wop.me.character.body.setVelocity(0, 0);
@@ -150,6 +157,9 @@ export default class Me extends Feature {
     // On server message received logic here
     if (message.type == 'player.join' && message.correlationToken == (wop.me || {}).correlationToken) {
       wop.me.id = message.id;
+      wop.me.setName(message.name);
+    }
+    if (message.type == 'player.changename' && message.id == wop.me.id) {
       wop.me.setName(message.name);
     }
 
