@@ -11,7 +11,7 @@
         "server": "yarn workspace world-server",
         "core": "yarn workspace world-core",
         "web": "yarn workspace world-client",
-        "build": "tsc --build"
+        "build": "yarn server build"
     },
     "devDependencies": {
         "typescript": "^3.9.7"

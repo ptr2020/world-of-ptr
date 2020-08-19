@@ -8,7 +8,8 @@ import update from './wop/update';
 /* Na wop lahko gledate kot nek ogromen objekt, ki vsebuje čisto vse podatke o vsemu
  Posledično lahko dostopate do česarkoli z wop.______ */
 var wop = {
-  debug: {}
+  debug: {},
+  debugMode: false,
 };
 window.wop = wop;
 

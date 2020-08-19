@@ -26,6 +26,7 @@ module.exports = {
     new CopyPlugin([
       {from: './src/public/index.html', to: 'index.html'},
       {from: './src/public/main.css', to: 'main.css'},
+      {from: './src/public/favicon.png', to: 'favicon.png'},
       {from: './src/public/resources', to: 'resources'},
     ]),
     // Pass env variables into javascript

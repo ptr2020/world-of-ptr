@@ -17,7 +17,7 @@ export class Monster extends Entity {
     public influenceRadius: number;
 
     constructor(
-        id: number,
+        id: string,
         position: Vector2,
         monsterType: MonsterType,
         spawnerID: number,

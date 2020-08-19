@@ -13,8 +13,7 @@ export default class Players extends Feature {
     super.preload(wop);
 
     // Preload game resources here
-    wop.scene.load.image('arrow', 'resources/arrow.png');
-
+    wop.scene.load.image('cowboy', 'resources/yeehaw1Mid.png');
   }
 
   create(wop) {
@@ -43,26 +42,31 @@ export default class Players extends Feature {
     switch (message.type) {
       case "player.join":
         // Join the player
-        if (message.id !== "12345") {
-          wop.state.addPlayer(new Player(wop, message.id, message.name, message.pos.x, message.pos.y, 0, false));
+        if (message.correlationToken == wop.me.correlationToken) {
+          return;
         }
+
+        wop.state.addPlayer(new Player(wop, message.id, message.name, message.pos.x, message.pos.y, 0, false));
         break;
       case "player.leave":
         // Remove the player
-        if (message.id !== "12345") {
-          wop.state.removePlayer(message.id);
-        }
+        wop.state.removePlayer(message.id);
         break;
       case "player.move":
         // Move the player
         let player = wop.state.getPlayers().find((x) => x.id === message.id);
-        //console.log(player);
+        if (!player)
+          return;
+
         player.character.x = message.pos.x;
         player.character.y = message.pos.y;
         player.character.body.setVelocity(message.vel.x, message.vel.y);
 
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);
-        player.character.rotation = vector.angle();
+        if (vector.length() > 0) {
+          player.angle = (vector.angle()) / (2*Math.PI) * 360;
+        }
+       
         break;
     }
   }

@@ -12,7 +12,7 @@ export class MonsterSpawner extends Entity {
     public currentMonsters: number;
 
     constructor(
-        id: number,
+        id: string,
         position: Vector2,
         monsterType: MonsterType,
         spawnRate: number,
