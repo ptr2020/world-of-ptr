@@ -9,6 +9,7 @@ export default class State {
     this.terrainFrequency = 0.1;
     this.state = {
       players: [],
+      bullets: [],
       gameSeed: "211231334",
       worldTiles: [],
       tileSize: 0.25

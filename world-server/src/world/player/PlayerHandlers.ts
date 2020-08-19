@@ -1,19 +1,22 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerShootMessage, PlayerNameMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
+import { Bullet } from './Bullet';
 import { allowedNodeEnvironmentFlags } from 'process';
 
 export class PlayerHandler implements Messages.MsgHandler {
     private players: Player[];
+    private bullets: Bullet[];
 
-    constructor(players: Player[]) {
+    constructor(players: Player[], bullets: Bullet[]) {
         this.players = players;
+        this.bullets = bullets;
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move', 'player.changename'];
+        return ['player.join', 'player.leave', 'player.move', 'player.shoot', 'player.changename'];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -39,13 +42,12 @@ export class PlayerHandler implements Messages.MsgHandler {
             return;
         }
 
-        let player = this.players.find(p => p.id == message.id!);
+        let player = this.players.find(p => p.id == message.clientId!);
         switch (message.type) {
             case 'player.join':
                 let joinMessage = message as PlayerJoinMessage;
-
                 joinMessage.id = msg.clientId!;
-                joinMessage.name = `Player ${joinMessage.id}`;
+                if(joinMessage.name === null) joinMessage.name = `Player ${joinMessage.id}`;
 
                 // Notify everybody else that player joined
                 Router.emit(new BroadcastMessage(joinMessage));
@@ -82,6 +84,13 @@ export class PlayerHandler implements Messages.MsgHandler {
 
                 this.players.splice(index, 1);
                 Router.emit(new BroadcastMessage(message));
+                break;
+            
+            case 'player.shoot':
+                let shootMessage = message as PlayerShootMessage;
+                // Uncomment this when we have a physics loop
+                //this.bullets.push(new Bullet(shootMessage.pos, shootMessage.vel, player!.id, shootMessage.damage, shootMessage.lifetime));
+                Router.emit(new BroadcastMessage(shootMessage));
                 break;
 
             case 'player.changename':

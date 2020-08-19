@@ -21,7 +21,7 @@ export class MonsterSpawner extends Entity {
         maxMonsters: number,
         currentMonsters: number
     ) {
-        super(id, position);
+        super(position);
         this.monsterType = monsterType;
         this.spawnRate = spawnRate;
         this.spawnRadius = spawnRadius;
