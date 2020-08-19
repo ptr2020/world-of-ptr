@@ -1,5 +1,5 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerShootMessage, PlayerNameMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerShootMessage, PlayerNameMessage, PlayerRotateMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
@@ -16,7 +16,7 @@ export class PlayerHandler implements Messages.MsgHandler {
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move', 'player.shoot', 'player.changename'];
+        return ['player.join', 'player.leave', 'player.move', 'player.rotate', 'player.shoot', 'player.changename'];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -70,8 +70,14 @@ export class PlayerHandler implements Messages.MsgHandler {
                 let moveMsg = message as PlayerMoveMessage;
                 // In reality, server should validate received pos with it's own and send back corrections
                 player!.position = { x: moveMsg.pos.x, y: moveMsg.pos.y };
-                player!.velocity = { x: moveMsg.vel.x, y: moveMsg.vel.y };
+                player!.setVelocity(moveMsg.vel, player!.angle);
                 Router.emit(new BroadcastMessage(moveMsg));
+                break;
+
+            case 'player.rotate':
+                let rotateMsg = message as PlayerRotateMessage;
+                player!.angle = rotateMsg.angle;
+                Router.emit(new BroadcastMessage(rotateMsg));
                 break;
 
             case 'player.leave':

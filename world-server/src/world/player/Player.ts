@@ -3,6 +3,8 @@ import { Vector2 } from "../Math";
 import { Weapon } from "./Weapon";
 import { ShopItem } from "../shop";
 
+import Victor from 'victor';
+
 export class Player extends Entity {
     public health: number;
     public maxHealth: number;
@@ -12,6 +14,8 @@ export class Player extends Entity {
     public weapon: Weapon;
     public score: number = 0;
     public direction: number = 0;
+
+    public angle: number;
 
     // PLACEHOLDER UNTIL IT IS DECIDED HOW WE DIFFERENTIATE THE PLAYERS
     public texture = 'PLACEHOLDER';
@@ -39,6 +43,7 @@ export class Player extends Entity {
         this.speed = speed;
         this.coins = coins;
         this.weapon = weapon;
+        this.angle = 0;
     }
 
     addScore(score: number){
@@ -79,5 +84,13 @@ export class Player extends Entity {
 
     buyItem(item: ShopItem){
         // Buying logic
+    }
+
+    public setVelocity(speed: number, angle: number): void {
+        this.angle = angle;
+        let vec = new Victor(speed, 0);
+        vec.rotate(angle);
+
+        this.velocity = { x: vec.x, y: vec.y };
     }
 }

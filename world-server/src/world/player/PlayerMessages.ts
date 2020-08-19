@@ -22,7 +22,7 @@ export class PlayerJoinMessage extends PlayerMessage {
 }
 
 export class PlayerMoveMessage extends PlayerMessage {
-    constructor(id: string, pos: Vector2, vel: Vector2) {
+    constructor(id: string, pos: Vector2, vel: number) {
         super();
         
         this.type = 'player.move';
@@ -32,7 +32,21 @@ export class PlayerMoveMessage extends PlayerMessage {
     }
 
     public pos: Vector2;
-    public vel: Vector2;
+    public vel: number;
+}
+
+export class PlayerRotateMessage extends PlayerMessage {
+    constructor(id: string, angle: number, vel: number) {
+        super();
+
+        this.type = 'player.rotate';
+        this.id = id;
+        this.angle = angle;
+        this.vel = vel;
+    }
+
+    public angle: number;
+    public vel: number;
 }
 
 export class PlayerLeaveMessage extends PlayerMessage {

@@ -116,8 +116,6 @@ export class Server implements Messages.MsgHandler {
             return;
         }
 
-        this.socketMap.forEach((socket: websocket.connection, _id: string) => {
-            socket.sendUTF(JSON.stringify(msg.msg));
-        });
+        this.wsServer.broadcastUTF(JSON.stringify(msg.msg));
     }
 }
