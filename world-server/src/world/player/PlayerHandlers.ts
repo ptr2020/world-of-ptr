@@ -43,9 +43,8 @@ export class PlayerHandler implements Messages.MsgHandler {
         switch (message.type) {
             case 'player.join':
                 let joinMessage = message as PlayerJoinMessage;
-
                 joinMessage.id = msg.clientId!;
-                joinMessage.name = `Player ${joinMessage.id}`;
+                if(joinMessage.name === null) joinMessage.name = `Player ${joinMessage.id}`;
 
                 // Notify everybody else that player joined
                 Router.emit(new BroadcastMessage(joinMessage));
