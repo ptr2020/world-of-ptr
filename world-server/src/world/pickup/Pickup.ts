@@ -5,7 +5,7 @@ export class Pickup extends Entity {
     public scoreOnPickup: number;
 
     constructor(id: string, position: Vector2, scoreOnPickup: number = 100){
-        super(id, position);
+        super(position);
         this.scoreOnPickup = scoreOnPickup;
     }
 

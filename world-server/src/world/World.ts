@@ -1,4 +1,4 @@
-import { Player } from "./player";
+import { Player, Bullet } from "./player";
 import { Monster, MonsterSpawner } from "./npc";
 import { Pickup } from "./pickup";
 import { ShopItem, ITEM_TYPE } from "./shop";
@@ -18,6 +18,7 @@ export class World {
     public monsters: Monster[];
     public pickups: Pickup[];
     public monsterSpawners: MonsterSpawner[];
+    public bullets: Bullet[];
 
     // This should be populated at the start of the game with all the items
     // that will be available for purchase
@@ -40,11 +41,12 @@ export class World {
         this.monsters = [];
         this.pickups = [];
         this.monsterSpawners = [];
+        this.bullets = [];
 
         this.shopItems = [];
         this.worldTiles = [];
 
-        this.playerMsgHandler = new PlayerHandler(this.players);
+        this.playerMsgHandler = new PlayerHandler(this.players, this.bullets);
         Router.register(this.playerMsgHandler);
     }
 
