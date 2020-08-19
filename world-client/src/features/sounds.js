@@ -13,9 +13,12 @@ export default class Sounds extends Feature {
     super.create(wop);
 
     // Prepare scene here
-    wop.scene.sound.play('BGMusic');
-
+    var bgMusic = wop.scene.sound.add('BGMusic');
+    bgMusic.setLoop(true);
+    bgMusic.setVolume(0.6); // 60% volume
+    bgMusic.play();
   }
+
   update(wop) {
     super.update(wop);
 
