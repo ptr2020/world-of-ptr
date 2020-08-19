@@ -42,3 +42,12 @@ export class PlayerLeaveMessage extends PlayerMessage {
         this.id = id;
     }
 }
+
+export class PlayerNameMessage extends PlayerMessage {
+    constructor(id: string) {
+        super();
+        
+        this.type = 'player.changename';
+        this.id = id;
+    }
+}

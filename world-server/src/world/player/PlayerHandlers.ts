@@ -1,5 +1,5 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
@@ -67,6 +67,11 @@ export class PlayerHandler implements Messages.MsgHandler {
                     Logger.error(`Player ${leaveMessage.id!} trying to leave but server doesn't know this player`);
                     break;
                 }
+            case 'player.changename':
+                    let messagechangename = message as PlayerNameMessage;
+                    
+                    Router.emit(new BroadcastMessage(messagechangename));
+                    break;
 
                 this.players.splice(index, 1);
                 Router.emit(new BroadcastMessage(message));
