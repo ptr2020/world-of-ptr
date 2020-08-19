@@ -119,13 +119,6 @@ export class World {
                 this.worldTiles[t][u].tileType = shop_id;
             }
         }
-
-        for (let i = 0; i < 65; i++) {
-            for (let j = 0; j < 65; j++) {
-                process.stdout.write(this.worldTiles[i][j].tileType.toString());
-            }
-            process.stdout.write("\n");
-        }
         // TODO: generate world :) : in progress
         // Monsters spawners, pickups
         // Use this.gameSeed: Done
