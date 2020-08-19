@@ -41,6 +41,7 @@ export class PlayerLeaveMessage extends PlayerMessage {
         
         this.type = 'player.leave';
         this.id = id;
+        this.clientId = id;
     }
 }
 
