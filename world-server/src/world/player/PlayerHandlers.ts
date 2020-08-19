@@ -27,7 +27,7 @@ export class PlayerHandler implements Messages.MsgHandler {
             return;
         }
 
-        let player = this.players.find(p => p.id == msg.clientId!);
+        let player = this.players.find(p => p.id == message.id!);
         switch (message.type) {
             case 'player.join':
                 let joinMessage = message as PlayerJoinMessage;
@@ -68,7 +68,7 @@ export class PlayerHandler implements Messages.MsgHandler {
                     break;
                 }
 
-                this.players = this.players.splice(index, 1);
+                this.players.splice(index, 1);
                 Router.emit(new BroadcastMessage(message));
                 break;
         }
