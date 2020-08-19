@@ -74,9 +74,17 @@ export class PlayerHandler implements Messages.MsgHandler {
 
             case 'player.changename':
                 let nameMessage = message as PlayerNameMessage;
-                player!.name = nameMessage.name;
-
-                Router.emit(new BroadcastMessage(nameMessage));
+                let length = nameMessage.name.length;
+                if (length <= 20) {
+                    player!.name = nameMessage.name;
+                    Router.emit(new BroadcastMessage(nameMessage));
+                } else {
+                    let newMessage = {
+                        type: 'player.wrongname', // add on frontend
+                        id: player!.id,
+                    }
+                    Router.emit(new BroadcastMessage(newMessage));
+                };
                 break;
 
         }
