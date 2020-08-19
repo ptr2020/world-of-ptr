@@ -5,8 +5,6 @@ import create from './wop/create';
 import update from './wop/update';
 
 // We'll use wop as a namespace for game objects
-/* Na wop lahko gledate kot nek ogromen objekt, ki vsebuje čisto vse podatke o vsemu
- Posledično lahko dostopate do česarkoli z wop.______ */
 var wop = {
   debug: {},
   debugMode: false,
