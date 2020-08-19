@@ -67,15 +67,17 @@ export class PlayerHandler implements Messages.MsgHandler {
                     Logger.error(`Player ${leaveMessage.id!} trying to leave but server doesn't know this player`);
                     break;
                 }
-            case 'player.changename':
+                this.players.splice(index, 1);
+                Router.emit(new BroadcastMessage(message));
+                break;
+            
+                case 'player.changename':
                     let messagechangename = message as PlayerNameMessage;
                     
                     Router.emit(new BroadcastMessage(messagechangename));
                     break;
 
-                this.players.splice(index, 1);
-                Router.emit(new BroadcastMessage(message));
-                break;
+                
         }
     }
 
