@@ -51,8 +51,8 @@ export default class Player {
   update() {
 
     // Normalize angle
-    if (this.angle > 180) this. angle -= 360;
-    if (this.angle < -180) this. angle += 360;
+    if (this.angle > 180) this.angle -= 360;
+    if (this.angle < -180) this.angle += 360;
 
     this.character.angle = this.angle;
 
