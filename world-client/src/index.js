@@ -14,10 +14,9 @@ window.wop = wop;
 // Prepare Phaser game configuration
 var gameConfig = {
   type: Phaser.AUTO,
-  width: 1280,
-  height: 720,
+  width: window.innerWidth,
+  height: window.innerHeight,
   scale: {
-    mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   physics: {
@@ -35,6 +34,12 @@ wop.game = new Phaser.Game(gameConfig);
 
 wop.socket = new Socket(wop);
 wop.socket.connect();
+
+// window resize logika
+window.addEventListener('resize', () => {
+  wop.game.scale.resize(window.innerWidth, window.innerHeight);
+});
+
 
 // *** Mock for echo server ***
 var mockJaka = false;

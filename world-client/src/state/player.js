@@ -23,6 +23,7 @@ export default class Player {
     this.character.setBounce(0, 0);
     this.character.setCollideWorldBounds(true);
     this.character.body.onOverlap = true;
+    this.character.player = this;
 
 
     this.nameText = wop.scene.add.text(x, y, name, {
@@ -91,6 +92,15 @@ export default class Player {
     // Position name text over player's character
     this.nameText.x = this.character.x -this.nameText.width/2;
     this.nameText.y = this.character.y -this.character.height*0.75;
+
+    // Bush check
+    if (this.standingOn == "bush") {
+      this.character.setAlpha(this.isMe ? 0.6 : 0.15);
+      this.nameText.setAlpha(this.isMe ? 0.6 : 0);
+    } else {
+      this.character.setAlpha(1);
+      this.nameText.setAlpha(1);
+    }
 
     // Update debugText
     var showDebugText = this.isMe && wop.debugMode;
