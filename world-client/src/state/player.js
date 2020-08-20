@@ -61,7 +61,7 @@ export default class Player {
       //this.character.body.setVelocity(this.character.body.vel.length(), 0);
       //this.character.body.velocity.rotate(this.angle);
       this.angle += this.angleVel;
-      this.character.body.velocity.setAngle(this.angle);
+      this.character.body.velocity.setAngle(this.angle/180*Math.PI);
     }
 
 

@@ -142,11 +142,13 @@ export default class Me extends Feature {
     wop.me.angle += curAngleChange;
 
     if (Math.abs(currentVel.length() - wop.me.character.body.velocity.length()) > 0.01) {
+      var velocitySign = 1;
+      if (Math.abs(wop.me.character.body.velocity.angle - wop.me.angle) > 179.9) velocitySign = -1;
       wop.socket.send({
         type: 'player.move',
         id: wop.me.id,
         pos: { x: wop.me.character.x, y: wop.me.character.y },
-        vel: wop.me.character.body.velocity.length()
+        vel: velocitySign * wop.me.character.body.velocity.length()
       });
     }
 

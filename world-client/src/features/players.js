@@ -56,9 +56,8 @@ export default class Players extends Feature {
 
         player.character.x = message.pos.x;
         player.character.y = message.pos.y;
-        //player.character.body.setVelocity(message.vel.x, message.vel.y);
         player.character.body.setVelocity(message.vel, 0);
-        player.character.body.velocity.rotate(player.angle);
+        player.character.body.velocity.setAngle(player.angle/180*Math.PI);
 
         /*
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);
@@ -74,8 +73,9 @@ export default class Players extends Feature {
         if (!player) return;
         player.angle = message.angle;
         player.angleVel = message.vel;
-        player.character.body.setVelocity(player.character.body.vel.length(), 0);
-        player.character.body.velocity.rotate(player.angle);
+        player.character.body.velocity.setAngle(player.angle/180*Math.PI);
+        //player.character.body.setVelocity(player.character.body.vel.length(), 0);
+        //player.character.body.velocity.rotate(player.angle);
         break;
 
 
