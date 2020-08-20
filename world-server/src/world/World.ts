@@ -10,9 +10,11 @@ import { Router } from 'world-core';
 import random = require('random');
 import seedrandom = require('seedrandom');
 import SimplexNoise = require('simplex-noise');
+import { ChatHandler } from "./chat/ChatHandlers";
 
 export class World {
     private playerMsgHandler: PlayerHandler;
+    private chatMsgHandler: ChatHandler;
 
     public players: Player[];
     public monsters: Monster[];
@@ -48,6 +50,9 @@ export class World {
 
         this.playerMsgHandler = new PlayerHandler(this.players, this.bullets);
         Router.register(this.playerMsgHandler);
+
+        this.chatMsgHandler = new ChatHandler(100, this.players);
+        Router.register(this.chatMsgHandler);
     }
 
     init() {

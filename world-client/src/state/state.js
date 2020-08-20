@@ -95,7 +95,6 @@ export default class State {
     this.state.players[playerIndex].destroy();
     this.state.players.splice(playerIndex, 1);
   }
-
 }
 
 export const TILE_TYPES = {
