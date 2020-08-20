@@ -28,6 +28,11 @@ export class PlayerHandler implements Messages.MsgHandler {
         "Dick Butkiss",
         "Pat Myass",
         "Belle E. Flopp",
+        "Mr. Whiener",
+        "Dick Smasher",
+        "Jack Goff",
+        "Justin Sider",
+        "Willie Stroker",
     ];
 
     // Validate name is present, between 3 and 20 characters and only contains alphanumeric characters and spaces
@@ -38,6 +43,11 @@ export class PlayerHandler implements Messages.MsgHandler {
 
         if (!name.match(/^[\w ]+$/)) {
             return false;
+        }
+        for(let i = 0;i < this.players.length; i++){
+            if(name == this.players[i].name){
+                return false;
+            }
         }
 
         return name.length > 3 && name.length < 20;
