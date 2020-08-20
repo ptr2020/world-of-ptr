@@ -26,7 +26,7 @@ export default class Camera extends Feature {
     // Prevent native browser zoom which causes other UI elements (like chat) to resize
     // Instead use custom zoom handlers
     document.addEventListener('wheel', (event) => {
-      if (event.ctrlKey === true) {
+      if (event.ctrlKey) {
         if (event.deltaY < 0 && this.zoom < 5) {
           this.zoom += 0.15;
           wop.scene.cameras.main.setZoom(this.zoom);
@@ -37,7 +37,7 @@ export default class Camera extends Feature {
 
         event.preventDefault();
       }
-    });
+    }, { passive: false });
 
     document.addEventListener('keydown', (event) => {
       if (event.ctrlKey && event.key === '+') {
@@ -53,7 +53,7 @@ export default class Camera extends Feature {
         }
         event.preventDefault();
       }
-    });
+    }, { passive: false });
   }
 
   update(wop) {
