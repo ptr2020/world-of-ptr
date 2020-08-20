@@ -11,6 +11,7 @@ export default class Camera extends Feature {
 
   create(wop) {
     super.create(wop);
+    this.zoom = 2;
 
     // Prepare scene here
 
@@ -20,7 +21,39 @@ export default class Camera extends Feature {
 
     var roundPixels = false;
     wop.scene.cameras.main.startFollow(wop.me.character, roundPixels, 0.08, 0.08);
-    wop.scene.cameras.main.setZoom(2);
+    wop.scene.cameras.main.setZoom(this.zoom);
+
+    // Prevent native browser zoom which causes other UI elements (like chat) to resize
+    // Instead use custom zoom handlers
+    document.addEventListener('wheel', (event) => {
+      if (event.ctrlKey === true) {
+        if (event.deltaY < 0 && this.zoom < 5) {
+          this.zoom += 0.15;
+          wop.scene.cameras.main.setZoom(this.zoom);
+        } else if (event.deltaY > 0 && this.zoom > 0.8) {
+          this.zoom -= 0.15;
+          wop.scene.cameras.main.setZoom(this.zoom);
+        }
+
+        event.preventDefault();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.key === '+') {
+        if (this.zoom < 5) {
+          this.zoom += 0.15;
+          wop.scene.cameras.main.setZoom(this.zoom);
+        }
+        event.preventDefault();
+      } else if (event.ctrlKey && event.key === '-') {
+        if (this.zoom > 0.8) {
+          this.zoom -= 0.15;
+          wop.scene.cameras.main.setZoom(this.zoom);
+        }
+        event.preventDefault();
+      }
+    });
   }
 
   update(wop) {
