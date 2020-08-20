@@ -68,7 +68,24 @@ export default class Chat extends Feature {
         li.appendChild(text);
         // Finally add message
         messages.appendChild(li);
+        
+
+        var player = wop.state.getPlayers().find((x) => x.id === message.id);
+        if (!player)
+          break;
+        player.currentMessage = message.text;
+        if (player.chatTimeoutHandle > -1) {
+          clearTimeout(player.chatTimeoutHandle || null);
+        }
+
+        player.setMessage(player.currentMessage)
+        player.chatTimeoutHandle = setTimeout(this.clearMessage, 4000, player);
+
         break;
     }
+  }
+  clearMessage(player){
+    player.setMessage("");
+    player.chatTimeoutHandle = -1;
   }
 }

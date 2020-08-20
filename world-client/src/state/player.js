@@ -21,6 +21,7 @@ export default class Player {
     this.messageReceiveTime = 0;
     this.desiredInterpTime = 1000 / 60 - 1;
 
+    this.currentMessage = "";
     this.isMe = isMe;
     this.standingOn = "";
 
@@ -41,7 +42,13 @@ export default class Player {
       fontSize: 16,
       color: isMe ? 'yellow' : 'white'
     });
-    this.nameText.depth = 50;
+
+    this.messageText = wop.scene.add.text(x, y, this.currentMessage, {
+      fontFamily: 'Arial',
+      fontSize: 12,
+      color: 'white'
+    });
+    this.messageText.depth = 50;
 
     this.debugText = wop.scene.add.text(x, y, name, {
       fontFamily: 'Arial',
@@ -50,13 +57,17 @@ export default class Player {
       align: 'center',
     });
     this.nameText.depth = 40;
-
+    
     this.update();
   }
 
   setName(name) {
     this.name = name;
     this.nameText.setText(name);
+  }
+  setMessage(message) {
+    this.currentMessage = message;
+    this.messageText.setText(message);
   }
 
   update() {
@@ -109,6 +120,9 @@ export default class Player {
     // Position name text over player's character
     this.nameText.x = this.character.x -this.nameText.width/2;
     this.nameText.y = this.character.y -this.character.height*0.75;
+    this.messageText.x = this.character.x - this.messageText.width / 2;
+    this.messageText.y = this.character.y - this.character.height
+    
 
     if (!this.isAlive && this.deadFadeOut > 0) {
       this.deadFadeOut -= 0.04;
@@ -118,9 +132,11 @@ export default class Player {
     if (this.standingOn == "bush") {
       this.character.setAlpha(this.isMe ? 0.6 : 0.15);
       this.nameText.setAlpha(this.isMe ? 0.6 : 0);
+      this.messageText.setAlpha(this.isMe ? 0.6 : 0);
     } else {
       this.character.setAlpha(1);
       this.nameText.setAlpha(1);
+      this.messageText.setAlpha(1);
     }
 
     // Update debugText
