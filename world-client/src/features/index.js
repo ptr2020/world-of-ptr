@@ -6,6 +6,7 @@ import Scoreboard from "./scoreboard";
 import Overlap from "./overlap";
 import Shooting from "./shooting";
 import Sounds from "./sounds";
+import HelpScreen from "./helpscreen";
 
 export default {
   me: new Me(),
@@ -15,5 +16,6 @@ export default {
   scoreboard: new Scoreboard(),
   overlap: new Overlap(),
   shooting: new Shooting(),
-  sounds: new Sounds()
+  sounds: new Sounds(),
+  helpscreen: new HelpScreen()
 };
