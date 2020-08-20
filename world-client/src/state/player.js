@@ -16,6 +16,11 @@ export default class Player {
     this.health = this.maxHealth;
     this.sniperTurnSpeed = 1;
 
+    this.serverPosition = { x: x, y: y};
+    this.onMessagePosition = {x: x, y: y}
+    this.messageReceiveTime = 0;
+    this.desiredInterpTime = 1000 / 60 - 1;
+
     this.isMe = isMe;
     this.standingOn = "";
 
@@ -60,6 +65,14 @@ export default class Player {
     if (this.angle < -180) this.angle += 360;
 
     this.character.angle = this.angle;
+
+    if(this.character.x != this.serverPosition.x || this.character.y != this.serverPosition.y) {
+      let interpValue = (Date.now() - this.messageReceiveTime) / this.desiredInterpTime;
+      if(interpValue < 0.99) {
+        this.character.x = Phaser.Math.Interpolation.Linear([this.character.x, this.serverPosition.x], interpValue);
+        this.character.y = Phaser.Math.Interpolation.Linear([this.character.y, this.serverPosition.y], interpValue);
+      }
+    }
 
     if (this.character.anims) {
 

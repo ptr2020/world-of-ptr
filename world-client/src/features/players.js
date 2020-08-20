@@ -57,8 +57,7 @@ export default class Players extends Feature {
         player = wop.state.getPlayers().find((x) => x.id === message.id && x.id !== wop.me.id);
         if (!player) return;
 
-        player.character.x = message.pos.x;
-        player.character.y = message.pos.y;
+        player.serverPosition = message.pos;
         player.character.body.setVelocity(message.vel.x, message.vel.y);
 
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);

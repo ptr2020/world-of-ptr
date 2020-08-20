@@ -150,7 +150,7 @@ export class PlayerHandler implements Messages.MsgHandler {
             case 'player.shoot':
                 let shootMessage = message as PlayerShootMessage;
                 // Uncomment this when we have a physics loop
-                //this.bullets.push(new Bullet(shootMessage.pos, shootMessage.vel, player!.id, shootMessage.damage, shootMessage.lifetime));
+                this.bullets.push(new Bullet(shootMessage.pos, shootMessage.vel, player!.id, shootMessage.damage, shootMessage.lifetime));
                 Router.emit(new BroadcastMessage(shootMessage));
                 break;
 
