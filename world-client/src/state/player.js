@@ -4,6 +4,7 @@ export default class Player {
     this.id = id;
     this.name = name;
     this.angle = angle;
+    this.angleVel = 0;
     this.defaultSpeed = 120;
     this.sprintSpeedFactor = 1.6;
     this.backwardsSpeedFactor = 0.6;
@@ -55,6 +56,14 @@ export default class Player {
     if (this.angle < -180) this.angle += 360;
 
     this.character.angle = this.angle;
+
+    if (this.angleVel != 0) {
+      //this.character.body.setVelocity(this.character.body.vel.length(), 0);
+      //this.character.body.velocity.rotate(this.angle);
+      this.angle += this.angleVel;
+      this.character.body.velocity.setAngle(this.angle);
+    }
+
 
     if (this.character.anims) {
 

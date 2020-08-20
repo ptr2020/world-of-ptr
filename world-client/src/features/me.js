@@ -95,6 +95,7 @@ export default class Me extends Feature {
         });
     });
 
+    wop.me.lastAngleChange = 0;
   }
 
   update(wop) {
@@ -103,6 +104,7 @@ export default class Me extends Feature {
     // Game frame update logic here
     wop.me.update();
     let currentVel = wop.me.character.body.velocity.clone();
+    let curAngleChange = 0;
 
     // Prepare move vector
     var sprint = false;
@@ -130,19 +132,30 @@ export default class Me extends Feature {
 
     if (wop.keyActions.turnLeft.isDown || wop.keyActions.turnLeftAlt.isDown) {
       // turnLeft
-      wop.me.angle -= wop.me.turnSpeed;
+      curAngleChange = -wop.me.turnSpeed;
     }
     if (wop.keyActions.turnRight.isDown || wop.keyActions.turnRightAlt.isDown) {
       // turnRight
-      wop.me.angle += wop.me.turnSpeed;
+      curAngleChange = +wop.me.turnSpeed;
     }
 
-    if (!currentVel.equals(wop.me.character.body.velocity)) {
+    wop.me.angle += curAngleChange;
+
+    if (Math.abs(currentVel.length() - wop.me.character.body.velocity.length()) > 0.01) {
       wop.socket.send({
         type: 'player.move',
         id: wop.me.id,
         pos: { x: wop.me.character.x, y: wop.me.character.y },
-        vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y }
+        vel: wop.me.character.body.velocity.length()
+      });
+    }
+
+    if (curAngleChange != wop.me.lastAngleChange) {
+      wop.socket.send({
+        type: 'player.rotate',
+        id: wop.me.id,
+        angle: wop.me.angle,
+        vel: curAngleChange
       });
     }
 
@@ -152,6 +165,10 @@ export default class Me extends Feature {
       console.log("Game destroyed.");
     }
 
+
+    if (wop.keyActions.turnLeft.isDown || wop.keyActions.turnLeftAlt.isDown) wop.me.lastAngleChange = -wop.me.turnSpeed;
+    else if (wop.keyActions.turnRight.isDown || wop.keyActions.turnRightAlt.isDown) wop.me.lastAngleChange = wop.me.turnSpeed;
+    else wop.me.lastAngleChange = 0;
   }
 
   onSocketMessage(wop, message) {
