@@ -8,7 +8,9 @@ import update from './wop/update';
 var wop = {
   debug: {},
   debugMode: false,
+  sniperMode: false,
 };
+
 window.wop = wop;
 
 // Prepare Phaser game configuration

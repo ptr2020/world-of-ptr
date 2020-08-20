@@ -9,10 +9,11 @@ export default class HelpScreen extends Feature {
     super.create(wop);
 
     var textToDisplay =
-      "WASD or Arrow Keys = move\n"+
-      "N = change name\n"+
-      "B = debug\n"+
-      "SPACE = shoot\n"+
+      "WASD or Arrow Keys = move\n" +
+      "N = change name\n" +
+      "B = debug\n" +
+      "E = sniper mode\n" +
+      "SPACE = shoot\n" +
       "SHIFT = sprint";
 
     this.helpScreen = wop.scene.add.text(0, 0, textToDisplay, {

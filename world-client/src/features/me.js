@@ -85,12 +85,13 @@ export default class Me extends Feature {
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
       helpScreen: KeyCodes.H,
+      sniperMode: KeyCodes.E,
     }, false);
 
     wop.keyActions.toggleDebug.addListener('down', () => {
       wop.debugMode = !wop.debugMode;
     });
-
+    
     wop.keyActions.change_name.addListener('down', () => {
         let newName = prompt("Vpiši ime:");
         window.localStorage.setItem("playerName", newName);
@@ -137,19 +138,24 @@ export default class Me extends Feature {
 
     if (wop.keyActions.turnLeft.isDown || wop.keyActions.turnLeftAlt.isDown) {
       // turnLeft
-      wop.me.angle -= wop.me.turnSpeed;
+      if (wop.sniperMode){
+        wop.me.angle -= wop.me.sniperTurnSpeed;
+      } else {
+        wop.me.angle -= wop.me.turnSpeed;
+      }
+      
     }
     if (wop.keyActions.turnRight.isDown || wop.keyActions.turnRightAlt.isDown) {
       // turnRight
-      wop.me.angle += wop.me.turnSpeed;
-    }
+      if (wop.sniperMode){
+        wop.me.angle += wop.me.sniperTurnSpeed;
+        
+      }
+       else {
+        wop.me.angle += wop.me.turnSpeed;
+      }}
+    
 
-    if (wop.keyActions.gameStop.isDown) {
-      wop.game.isRunning = false;
-      wop.game.destroy();
-      console.log("Game destroyed.");
-    }
-  
     if (!currentVel.equals(wop.me.character.body.velocity)) {
       wop.socket.send({
         type: 'player.move',
@@ -158,7 +164,7 @@ export default class Me extends Feature {
         vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y }
       });
     }
-
+    
   }
 
   onSocketMessage(wop, message) {
@@ -174,5 +180,4 @@ export default class Me extends Feature {
     }
 
   }
-
 }

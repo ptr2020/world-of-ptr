@@ -9,6 +9,7 @@ export default class Player {
     this.backwardsSpeedFactor = 0.6;
     this.speed = this.defaultSpeed;
     this.turnSpeed = 5;
+    this.sniperTurnSpeed = 1;
 
     this.isMe = isMe;
     this.standingOn = "";
