@@ -28,6 +28,7 @@ export class Player extends Entity {
             damage: 20,
             bulletSize: 5,
             bulletSpread: 0,
+            bulletSpeed: 1,
             texture: 'PLACEHOLDER'
         }
     ) {

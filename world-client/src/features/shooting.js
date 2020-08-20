@@ -102,6 +102,8 @@ export class Bullet {
             ? angle / 180 * Math.PI
             : new Phaser.Math.Vector2(vel.x, vel.y).angle();
 
+        
+
         vektorZamik.rotate(angleFinal);
         this.metek.x += vektorZamik.x;
         this.metek.y += vektorZamik.y;

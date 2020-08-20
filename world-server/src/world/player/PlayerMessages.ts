@@ -72,3 +72,14 @@ export class PlayerNameMessage extends PlayerMessage {
         this.name = name;
     }
 }
+export class WeaponMessage extends PlayerMessage {
+    constructor(id: string, weapon: number, ) {
+        super();
+        
+        this.type = 'weapon.message';
+        this.id = id;
+        this.weapon = weapon;
+
+    }
+    public weapon: number;
+}

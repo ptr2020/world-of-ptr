@@ -1,5 +1,5 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerShootMessage, PlayerNameMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerShootMessage, PlayerNameMessage, WeaponMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
@@ -124,6 +124,12 @@ export class PlayerHandler implements Messages.MsgHandler {
                 Router.emit(new BroadcastMessage(nameMessage));
                 break;
 
+           case 'weapon.message':
+                let weaponMessage = message as WeaponMessage;
+                
+    
+                Router.emit(new BroadcastMessage(weaponMessage));
+                break;
         }
     }
 

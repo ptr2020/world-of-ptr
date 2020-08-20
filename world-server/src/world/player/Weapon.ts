@@ -3,5 +3,6 @@ export interface Weapon {
     damage: number,
     bulletSize: number,
     bulletSpread: number,
+    bulletSpeed: number;
     texture: string
 }
