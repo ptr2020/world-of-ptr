@@ -14,7 +14,11 @@ export default class Players extends Feature {
     super.create(wop);
 
     // Prepare scene here
-
+    wop.state.state.playersGroup = wop.scene.physics.add.staticGroup();
+    wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.bushGroup);
+    wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.grassGroup);
+    wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.mudGroup);
+    wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.waterGroup);
   }
 
   update(wop) {
