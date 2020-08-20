@@ -84,6 +84,7 @@ export default class Me extends Feature {
       change_name: KeyCodes.N,
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
+      helpScreen: KeyCodes.H,
     }, false);
 
     wop.keyActions.toggleDebug.addListener('down', () => {
