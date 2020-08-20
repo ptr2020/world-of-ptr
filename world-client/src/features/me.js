@@ -5,6 +5,11 @@ import Player from "../state/player";
 import * as cryptoRandomString from 'crypto-random-string';
 
 export default class Me extends Feature {
+  constructor(){
+    super();
+    this.inputBox = null;
+  }
+
   preload(wop) {
     super.preload(wop);
 
@@ -19,7 +24,6 @@ export default class Me extends Feature {
 
   create(wop) {
     super.create(wop);
-
     // Animations
     var frameRate = 20;
 
@@ -74,12 +78,13 @@ export default class Me extends Feature {
       moveBack: KeyCodes.DOWN, moveBackAlt: KeyCodes.S,
       turnLeft: KeyCodes.LEFT, turnLeftAlt: KeyCodes.A,
       turnRight: KeyCodes.RIGHT, turnRightAlt: KeyCodes.D,
-      sprint: KeyCodes.SHIFT, 
+      sprint: KeyCodes.SHIFT,
+      openChat: KeyCodes.ENTER,
       shoot: KeyCodes.SPACE,
       change_name: KeyCodes.N,
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
-    });
+    }, false);
 
     wop.keyActions.toggleDebug.addListener('down', () => {
       wop.debugMode = !wop.debugMode;
@@ -106,6 +111,7 @@ export default class Me extends Feature {
 
     // Prepare move vector
     var sprint = false;
+
     if (wop.keyActions.sprint.isDown && !wop.keyActions.turnLeft.isDown && !wop.keyActions.turnRight.isDown) {
       // Sprint enabled
       sprint = true;
@@ -115,14 +121,14 @@ export default class Me extends Feature {
       // moveForward
       var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
       if (sprint) vector.scale(wop.me.sprintSpeedFactor);
-      vector.rotate(wop.me.angle / 180 * Math.PI);
+      vector.rotate(wop.me.angle/180*Math.PI);
       wop.me.character.body.velocity = vector;
     } else if (wop.keyActions.moveBack.isDown || wop.keyActions.moveBackAlt.isDown) {
       // moveBack
       var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
       if (sprint) vector.scale(wop.me.sprintSpeedFactor);
       vector.scale(wop.me.backwardsSpeedFactor);
-      vector.rotate(wop.me.angle / 180 * Math.PI + Math.PI);
+      vector.rotate(wop.me.angle/180*Math.PI + Math.PI);
       wop.me.character.body.velocity = vector;
     } else {
       wop.me.character.body.setVelocity(0, 0);
@@ -137,6 +143,12 @@ export default class Me extends Feature {
       wop.me.angle += wop.me.turnSpeed;
     }
 
+    if (wop.keyActions.gameStop.isDown) {
+      wop.game.isRunning = false;
+      wop.game.destroy();
+      console.log("Game destroyed.");
+    }
+  
     if (!currentVel.equals(wop.me.character.body.velocity)) {
       wop.socket.send({
         type: 'player.move',
@@ -144,12 +156,6 @@ export default class Me extends Feature {
         pos: { x: wop.me.character.x, y: wop.me.character.y },
         vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y }
       });
-    }
-
-    if (wop.keyActions.gameStop.isDown) {
-      wop.game.isRunning = false;
-      wop.game.destroy();
-      console.log("Game destroyed.");
     }
 
   }

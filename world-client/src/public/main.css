@@ -4,6 +4,53 @@ html, body {
     overflow: hidden;
 }
 
+#chatContainer {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.chatArea {
+    background:black;
+    overflow-y: auto;
+    min-height: 200px;
+    opacity: 0.65;
+    flex: 1;
+    display: flex;
+}
+#inputMessage {
+    opacity: 0.65;
+    background: black;
+    color: white;
+    padding: 5px 0 5px 5px;
+    border: none;
+    border-top: white solid 2px;
+}
+.messages {
+    list-style-type: none;
+    padding: 0 5px 0 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex: 1;
+}
+.messages li {
+    font-family: 'Arial';
+    color: white;
+    text-align: left;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.messages li b {
+    font-weight: 1800;
+}
+
 canvas {
     margin: 0 !important;
 }
