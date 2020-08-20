@@ -15,6 +15,34 @@ export class PlayerHandler implements Messages.MsgHandler {
         this.bullets = bullets;
     }
 
+    // A few random names to return when player joins with an invalid name
+    private randomFunnyNames: string[] = [
+        "Al K. Holic",
+        "Ben Dover",
+        "Ivana Tinkle",
+        "Ivana Humpalot",
+        "April Pealot",
+        "Harry Dickman",
+        "Ben Gay",
+        "Rosie Kuntz",
+        "Dick Butkiss",
+        "Pat Myass",
+        "Belle E. Flopp",
+    ];
+
+    // Validate name is present, between 3 and 20 characters and only contains alphanumeric characters and spaces
+    private validateName(name: string): boolean {
+        if (!name) {
+            return false;
+        }
+
+        if (!name.match(/^[\w ]+$/)) {
+            return false;
+        }
+
+        return name.length > 3 && name.length < 20;
+    }
+
     public getTypes(): string[] {
         return ['player.join', 'player.leave', 'player.move', 'player.shoot', 'player.changename'];
     }
@@ -23,13 +51,7 @@ export class PlayerHandler implements Messages.MsgHandler {
         switch (msg.type) {
             case 'player.changename':
                 let nameMessage = msg as PlayerNameMessage;
-                let newName = nameMessage.name.trim();
-
-                if(newName.length < 3 || newName.length > 20 || !newName.match(/^[\w ]+$/)) {
-                    return false;
-                }
-
-                break;
+                return this.validateName(nameMessage.name.trim());
         }
 
         return true;
@@ -47,7 +69,9 @@ export class PlayerHandler implements Messages.MsgHandler {
             case 'player.join':
                 let joinMessage = message as PlayerJoinMessage;
                 joinMessage.id = msg.clientId!;
-                if(joinMessage.name === null) joinMessage.name = `Player ${joinMessage.id}`;
+                if (joinMessage.name === null || !this.validateName(joinMessage.name)) {
+                    joinMessage.name = this.randomFunnyNames[Math.floor(Math.random() * this.randomFunnyNames.length)];
+                }
 
                 // Notify everybody else that player joined
                 Router.emit(new BroadcastMessage(joinMessage));
