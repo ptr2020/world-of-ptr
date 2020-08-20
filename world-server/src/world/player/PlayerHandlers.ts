@@ -1,5 +1,5 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerShootMessage, PlayerNameMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage, PlayerHealthMessage, PlayerRespawnMessage, PlayerDieMessage, PlayerShootMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
@@ -54,7 +54,7 @@ export class PlayerHandler implements Messages.MsgHandler {
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move', 'player.shoot', 'player.changename'];
+        return ['player.join', 'player.leave', 'player.move', 'player.health', 'player.respawn', 'player.shoot', 'player.changename' ];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -83,10 +83,12 @@ export class PlayerHandler implements Messages.MsgHandler {
                     joinMessage.name = this.randomFunnyNames[Math.floor(Math.random() * this.randomFunnyNames.length)];
                 }
 
+                let newPlayer = this.addPlayer(joinMessage);
+                joinMessage.pos = newPlayer.position;
+
                 // Notify everybody else that player joined
                 Router.emit(new BroadcastMessage(joinMessage));
 
-                this.addPlayer(joinMessage);
                 // Emit join messages to new client so we are aware of everyone
                 for (let otherPlayer of this.players) {
                     // Don't send my own data back
@@ -119,6 +121,31 @@ export class PlayerHandler implements Messages.MsgHandler {
                 this.players.splice(index, 1);
                 Router.emit(new BroadcastMessage(message));
                 break;
+                
+            case 'player.health':
+                let healthMessage = message as PlayerHealthMessage;
+
+                let isAlive = player!.addHealth(healthMessage.deltaHealth);
+                Logger.info("Player health changed: "+ player!.health);
+
+                Router.emit(new BroadcastMessage(message));
+
+                if(!isAlive){
+                    let dieMessage = new PlayerDieMessage(player!.id, player!.respawnTime );
+                    Router.emit(new BroadcastMessage(dieMessage));
+                    player!.die();
+                    
+                }
+                break;
+
+            case 'player.respawn':
+                let respawnMessage = message as PlayerRespawnMessage;
+                if(player?.die()) {
+                    respawnMessage.pos = player.respawn(true);
+                }
+
+                Router.emit(new BroadcastMessage(message));
+                break;
             
             case 'player.shoot':
                 let shootMessage = message as PlayerShootMessage;
@@ -137,10 +164,10 @@ export class PlayerHandler implements Messages.MsgHandler {
         }
     }
 
-    private addPlayer(msg: PlayerJoinMessage): void {
+    private addPlayer(msg: PlayerJoinMessage): Player {
         let player = new Player(msg.id!, undefined, msg.name, 100, 0, 0, undefined);
-        player.position = msg.pos;
-
+        player.respawn(false);
         this.players.push(player);
+        return player;
     }
 }

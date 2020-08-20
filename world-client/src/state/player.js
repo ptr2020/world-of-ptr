@@ -9,6 +9,11 @@ export default class Player {
     this.backwardsSpeedFactor = 0.6;
     this.speed = this.defaultSpeed;
     this.turnSpeed = 5;
+    this.isAlive = true;
+    this.deadFadeOut = 1;
+
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
     this.sniperTurnSpeed = 1;
 
     this.isMe = isMe;
@@ -25,7 +30,6 @@ export default class Player {
     this.character.setCollideWorldBounds(true);
     this.character.body.onOverlap = true;
     this.character.player = this;
-
 
     this.nameText = wop.scene.add.text(x, y, name, {
       fontFamily: 'Arial',
@@ -51,7 +55,6 @@ export default class Player {
   }
 
   update() {
-
     // Normalize angle
     if (this.angle > 180) this.angle -= 360;
     if (this.angle < -180) this.angle += 360;
@@ -94,6 +97,10 @@ export default class Player {
     this.nameText.x = this.character.x -this.nameText.width/2;
     this.nameText.y = this.character.y -this.character.height*0.75;
 
+    if (!this.isAlive && this.deadFadeOut > 0) {
+      this.deadFadeOut -= 0.04;
+      this.character.setAlpha(this.deadFadeOut);
+    }
     // Bush check
     if (this.standingOn == "bush") {
       this.character.setAlpha(this.isMe ? 0.6 : 0.15);
@@ -115,11 +122,25 @@ export default class Player {
         "On: "+this.standingOn
       );
     }
-
   }
 
   destroy() {
     this.character.destroy();
     this.nameText.destroy();
+  }
+
+  addHealth(deltaHealth) {
+    this.health += deltaHealth;
+    if (this.health < 0) this.health = 0;
+    if (this.health > this.maxHealth) this.health = this.maxHealth;
+  }
+
+  setIsAlive(isAlive) {
+    this.isAlive = isAlive;
+    this.nameText.setAlpha(isAlive ? 1 : 0);
+    if (isAlive) {
+      this.deadFadeOut = 1;
+      this.character.setAlpha(1);
+    }
   }
 }
