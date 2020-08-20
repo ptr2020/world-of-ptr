@@ -61,9 +61,12 @@ export default class Chat extends Feature {
         var li = window.document.createElement("li");
         // Construct elements by hand so we don't expose XSS by using innerHtml property
         var name = window.document.createElement("b");
-        name.innerText = message.name;
+        name.innerText = message.name + ": ";
         li.appendChild(name);
-        li.innerText = message.text;
+        // And message text
+        var text = window.document.createTextNode(message.text);
+        li.appendChild(text);
+        // Finally add message
         messages.appendChild(li);
         break;
     }
