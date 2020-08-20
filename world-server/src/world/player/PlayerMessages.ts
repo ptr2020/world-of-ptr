@@ -3,6 +3,7 @@ import { Vector2 } from '../Math';
 
 export abstract class PlayerMessage implements Messages.Message {
     public id?: string;
+    public clientId!: string;
     public type!: string;
 }
 
@@ -40,9 +41,26 @@ export class PlayerLeaveMessage extends PlayerMessage {
         
         this.type = 'player.leave';
         this.id = id;
+        this.clientId = id;
     }
 }
 
+export class PlayerShootMessage extends PlayerMessage {
+    constructor(id: string, pos: Vector2, vel: Vector2, damage: number, lifetime: number){
+        super();
+        this.type = 'player.shoot';
+        this.id = id;
+        this.pos = pos;
+        this.vel = vel;
+        this.damage = damage;
+        this.lifetime = lifetime;
+    }
+
+    public pos: Vector2;
+    public vel: Vector2;
+    public damage: number;
+    public lifetime: number;
+}
 export class PlayerNameMessage extends PlayerMessage {
     public name: string;
 

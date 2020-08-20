@@ -58,10 +58,12 @@ export default class Me extends Feature {
     // Prepare scene here
     wop.me = new Player(wop, null, null, 300, 200, 0, true);
     wop.me.correlationToken = cryptoRandomString({ length: 10 });
+    wop.me.name = window.localStorage.getItem('playerName');
     wop.socket.send({
       type: 'player.join',
       pos: { x: wop.me.character.x, y: wop.me.character.y },
-      correlationToken: wop.me.correlationToken
+      correlationToken: wop.me.correlationToken, 
+      name: wop.me.name
     });
 
     // Bind keyboard
@@ -71,7 +73,8 @@ export default class Me extends Feature {
       moveBack: KeyCodes.DOWN, moveBackAlt: KeyCodes.S,
       turnLeft: KeyCodes.LEFT, turnLeftAlt: KeyCodes.A,
       turnRight: KeyCodes.RIGHT, turnRightAlt: KeyCodes.D,
-      sprint: KeyCodes.SHIFT,
+      sprint: KeyCodes.SHIFT, 
+      shoot: KeyCodes.SPACE,
       change_name: KeyCodes.N,
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
@@ -82,13 +85,13 @@ export default class Me extends Feature {
     });
 
     wop.keyActions.change_name.addListener('down', () => {
-        wop.me.name = prompt("Vpiši ime:");
+        let newName = prompt("Vpiši ime:");
+        window.localStorage.setItem("playerName", newName);
         wop.socket.send({
           type: 'player.changename',
           id: wop.me.id,
-          name: wop.me.name,
+          name: newName,
         });
-  
     });
 
   }

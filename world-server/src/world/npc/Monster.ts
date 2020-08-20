@@ -24,7 +24,7 @@ export class Monster extends Entity {
         spawnerPosition: Vector2,
         influenceRadius: number
     ) {
-        super(id, position);
+        super(position);
         this.monsterType = monsterType;
         this.health = monsterType.maxHealth;
         this.spawnerID = spawnerID;

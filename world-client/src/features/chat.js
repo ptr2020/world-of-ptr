@@ -28,6 +28,7 @@ export default class Chat extends Feature {
     switch (message.type) {
       case "player.say":
         // Player says something in the chat
+        
         break;
     }
   }

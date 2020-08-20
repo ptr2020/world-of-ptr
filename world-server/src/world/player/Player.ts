@@ -31,7 +31,8 @@ export class Player extends Entity {
             texture: 'PLACEHOLDER'
         }
     ) {
-        super(id, position);
+        super(position);
+        this.id = id;
         this.maxHealth = maxHealth;
         this.health = this.maxHealth;
         this.name = name;

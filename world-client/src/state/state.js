@@ -9,6 +9,8 @@ export default class State {
     this.terrainFrequency = 0.1;
     this.state = {
       players: [],
+      playersGroup: null,
+      bullets: [],
       gameSeed: "211231334",
       worldTiles: [],
       tileSize: 0.25
@@ -84,10 +86,12 @@ export default class State {
 
   addPlayer(player) {
     this.state.players.push(player);
+    this.state.playersGroup.add(player.character);
   }
 
   removePlayer(playerId) {
     var playerIndex = this.state.players.findIndex((x) => x.id === playerId);
+    this.state.playersGroup.remove(this.state.players[playerIndex].character);
     this.state.players[playerIndex].destroy();
     this.state.players.splice(playerIndex, 1);
   }
