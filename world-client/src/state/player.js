@@ -19,7 +19,8 @@ export default class Player {
     this.sniperSpeedFactor = 0.3;
 
     this.serverPosition = { x: x, y: y};
-    this.onMessagePosition = {x: x, y: y}
+    this.onMessagePosition = {x: x, y: y};
+    this.messageProcessed = true;
     this.messageReceiveTime = 0;
     this.desiredInterpTime = 1000 / 60 - 1;
 
@@ -67,12 +68,15 @@ export default class Player {
     if (this.angle < -180) this.angle += 360;
 
     this.character.angle = this.angle;
-
     if(this.character.x != this.serverPosition.x || this.character.y != this.serverPosition.y) {
       let interpValue = (Date.now() - this.messageReceiveTime) / this.desiredInterpTime;
       if(interpValue < 0.99) {
         this.character.x = Phaser.Math.Interpolation.Linear([this.character.x, this.serverPosition.x], interpValue);
         this.character.y = Phaser.Math.Interpolation.Linear([this.character.y, this.serverPosition.y], interpValue);
+      } else if (!this.messageProcessed) {
+        this.character.x = this.serverPosition.x;
+        this.character.y = this.serverPosition.y;
+        this.messageProcessed = true;
       }
     }
 

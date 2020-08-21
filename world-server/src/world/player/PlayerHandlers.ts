@@ -111,6 +111,8 @@ export class PlayerHandler implements Messages.MsgHandler {
                 // In reality, server should validate received pos with it's own and send back corrections
                 player!.position = { x: moveMsg.pos.x, y: moveMsg.pos.y };
                 player!.velocity = { x: moveMsg.vel.x, y: moveMsg.vel.y };
+                moveMsg.pos = player!.position;
+                moveMsg.vel = player!.velocity;
                 Router.emit(new BroadcastMessage(moveMsg));
                 break;
 

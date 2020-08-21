@@ -19,6 +19,7 @@ export default class Players extends Feature {
     wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.grassGroup);
     wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.mudGroup);
     wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.waterGroup);
+    wop.scene.physics.add.collider(wop.state.state.playersGroup, wop.state.state.rockGroup);
   }
 
   update(wop) {
@@ -59,6 +60,8 @@ export default class Players extends Feature {
 
         player.serverPosition = message.pos;
         player.character.body.setVelocity(message.vel.x, message.vel.y);
+        player.messageReceiveTime = Date.now();
+        player.messageProcessed = false;
 
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);
         if (vector.length() > 0) {
