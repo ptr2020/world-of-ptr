@@ -20,7 +20,7 @@ export default class Environment extends Feature {
     wop.scene.cameras.main.alpha = 1;
     wop.day = true;
 
-    wop.nightShade = wop.scene.add.rectangle(0, 0, 1920, 1920, 0x000000, 1);
+    wop.nightShade = wop.scene.add.rectangle(0, 0, 3440, 3440, 0x000000, 1);
     wop.nightShade.depth = 50;
     wop.nightShade.setOrigin(0, 0);
   }
