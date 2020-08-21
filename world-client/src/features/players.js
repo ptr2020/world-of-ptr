@@ -65,8 +65,10 @@ export default class Players extends Feature {
 
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);
         if (vector.length() > 0) {
-          player.angle = (vector.angle()) / (2*Math.PI) * 360;
+          var goingBackRotation = message.r ? 180 : 0;
+          player.angle = (vector.angle()) / (2*Math.PI) * 360 + goingBackRotation;
         }
+
         break;
 
       case 'player.changename':

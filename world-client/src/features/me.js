@@ -145,6 +145,7 @@ export default class Me extends Feature {
     if (wop.me.isAlive) {
       // Prepare move vector
       var sprint = false;
+      var goingBackwards = false;
       if (wop.keyActions.sprint.isDown && !wop.keyActions.turnLeft.isDown && !wop.keyActions.turnRight.isDown) {
         // Sprint enabled
         sprint = true;
@@ -163,6 +164,7 @@ export default class Me extends Feature {
         vector.scale(wop.me.backwardsSpeedFactor);
         vector.rotate(wop.me.angle / 180 * Math.PI + Math.PI);
         wop.me.character.body.velocity = vector;
+        goingBackwards = true;
       } else {
         wop.me.character.body.setVelocity(0, 0);
       }
@@ -191,7 +193,8 @@ export default class Me extends Feature {
           type: 'player.move',
           id: wop.me.id,
           pos: { x: wop.me.character.x, y: wop.me.character.y },
-          vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y }
+          vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y },
+          r: goingBackwards
         });
       }
     }
