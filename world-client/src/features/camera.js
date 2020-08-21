@@ -40,15 +40,16 @@ export default class Camera extends Feature {
     }, { passive: false });
 
     document.addEventListener('keydown', (event) => {
-      if (event.ctrlKey && event.key === '+') {
+      console.log("keydown", event.key);
+      if ((event.ctrlKey || event.metaKey) && event.key === '+') {
         if (this.zoom < 5) {
-          this.zoom += 0.15;
+          this.zoom += wop.scene.cameras.main.zoom * 0.1;
           wop.scene.cameras.main.setZoom(this.zoom);
         }
         event.preventDefault();
-      } else if (event.ctrlKey && event.key === '-') {
+      } else if ((event.ctrlKey || event.metaKey) && event.key === '-') {
         if (this.zoom > 0.8) {
-          this.zoom -= 0.15;
+          this.zoom -= wop.scene.cameras.main.zoom * 0.1;
           wop.scene.cameras.main.setZoom(this.zoom);
         }
         event.preventDefault();
