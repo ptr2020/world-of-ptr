@@ -13,9 +13,11 @@ import SimplexNoise = require('simplex-noise');
 import { setImmediate } from "timers";
 import * as MathWOP from "./Math";
 import { ChatHandler } from "./chat/ChatHandlers";
+import { ScoreboardHandler } from "./scoreboard/ScoreboardHandler";
 
 export class World {
     private playerMsgHandler: PlayerHandler;
+    private scoreboardHandler: ScoreboardHandler;
     private chatMsgHandler: ChatHandler;
 
     public players: Player[];
@@ -61,6 +63,9 @@ export class World {
 
         this.chatMsgHandler = new ChatHandler(100, this.players);
         Router.register(this.chatMsgHandler);
+
+        this.scoreboardHandler = new ScoreboardHandler(this.players);
+        Router.register(this.scoreboardHandler);
     }
 
     init() {

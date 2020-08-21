@@ -84,6 +84,8 @@ export default class Me extends Feature {
       openChat: KeyCodes.ENTER,
       shoot: KeyCodes.SPACE,
       change_name: KeyCodes.N,
+      show_scoreboard: KeyCodes.TAB,
+
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
       helpScreen: KeyCodes.H,
@@ -108,7 +110,7 @@ export default class Me extends Feature {
       fontFamily: 'Sans Sherif',
       fontSize: 50,
       color: 'red',
-      
+
     });
 
     wop.me.respawnText.visible = false;
@@ -118,7 +120,7 @@ export default class Me extends Feature {
       fontFamily: 'Sans Sherif',
       fontSize: 20,
       color: 'white',
-      
+
     });
 
     wop.me.respawnTimer.visible = false;
@@ -183,7 +185,6 @@ export default class Me extends Feature {
         // turnRight
         if (wop.sniperMode){
           wop.me.angle += wop.me.sniperTurnSpeed;
-          
         }
         else {
           wop.me.angle += wop.me.turnSpeed;
@@ -216,7 +217,6 @@ export default class Me extends Feature {
     // Pobarvamo health bar rdece ce je malo healtha ce ne pa zeleno
     if (wop.me.health <= 50 && wop.me.health > 30) {
       wop.me.healthBarRect.fillColor = 0xFF4500;
-    
     }
     else if (wop.me.health <= 30) {
       wop.me.healthBarRect.fillColor = 0xff0000;

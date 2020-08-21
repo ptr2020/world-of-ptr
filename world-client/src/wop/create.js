@@ -74,5 +74,8 @@ export default function create(wop) {
     this.physics.add.overlap(wop.me.character, wop.state.state.storeGroup);
   
     wop.socket.connect();
+
+    // Don't propagate events for keypresses
+    this.input.keyboard.addCapture(9);
   }
 }
