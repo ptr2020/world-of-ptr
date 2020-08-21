@@ -108,3 +108,14 @@ export class PlayerDieMessage extends PlayerMessage {
     public respawnTime: number;
 
 }
+
+export class PlayerSniperMessage extends PlayerMessage {
+    constructor(id: string, sniperMode: boolean) {
+        super();
+        this.type = 'player.sniper';
+        this.id = id;
+        this.sniperMode = sniperMode;
+    }
+
+    public sniperMode: boolean;
+}

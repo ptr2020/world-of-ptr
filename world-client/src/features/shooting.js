@@ -28,6 +28,16 @@ export default class Shooting extends Feature {
 
     wop.keyActions.sniperMode.addListener('down', () => {
       wop.sniperMode = !wop.sniperMode;
+      if(wop.sniperMode) {
+        wop.me.defaultSpeed *= wop.me.sniperSpeedFactor;
+      } else {
+        wop.me.defaultSpeed = wop.me.startSpeed;
+      }
+      wop.socket.send({
+        type: 'player.sniper',
+        sniperMode: wop.sniperMode,
+        correlationToken: wop.me.correlationToken
+      });
     });
 
     //SNIPER MODE

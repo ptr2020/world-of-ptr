@@ -95,6 +95,10 @@ export default class Players extends Feature {
         player.character.x = message.pos.x;
         player.character.y = message.pos.y;
         break;
+      
+      case 'player.sniper':
+        // Sniper weapon logic
+        break;
     }
   }
 }
