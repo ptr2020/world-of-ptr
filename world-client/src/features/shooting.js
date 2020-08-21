@@ -1,6 +1,8 @@
 import Feature from "./feature";
 import * as Phaser from 'phaser';
 import Player from "../state/player";
+import cryptoRandomString from "crypto-random-string";
+
 export default class Shooting extends Feature {
 
   constructor(){
@@ -53,7 +55,7 @@ export default class Shooting extends Feature {
     if (wop.keyActions.shoot.isDown && Date.now() - this.startTime > 120 ){
         this.startTime=Date.now();
         let bullet = new Bullet(
-            wop.me.id, 50, 700, 2000,
+            wop.me.id, cryptoRandomString({length: 10}), 20, 700, 2000,
             { x: wop.me.character.x, y: wop.me.character.y},
             { x: 700, y: 0 },
             wop.me.angle
@@ -63,6 +65,7 @@ export default class Shooting extends Feature {
         wop.socket.send({
             type: "player.shoot",
             correlationToken: wop.me.correlationToken,
+            bulletId: bullet.bulletId,
             pos: {
                 x: wop.me.character.x,
                 y: wop.me.character.y,
@@ -102,6 +105,7 @@ export default class Shooting extends Feature {
         if(message.clientId == wop.me.id) break;
         let bullet = new Bullet(
             message.clientId,
+            message.bulletId,
             message.damage,
             700,
             message.lifetime,
@@ -110,39 +114,47 @@ export default class Shooting extends Feature {
         );
         wop.state.state.bullets.push(bullet);
         break;
+      case 'bullet.hit':
+        let bulletIdx = wop.state.state.bullets.findIndex(x => x.bulletId == message.bulletId);
+        if(bulletIdx != -1) {
+          wop.state.state.bullets[bulletIdx].metek.destroy();
+          wop.state.state.bullets.splice(bulletIdx, 1);
+        }
+        break;
     }
   }
 
 }
 
 export class Bullet {
-    constructor(id, damage, BulletSpeed, lifetime, pos={x: wop.me.character.x, y: wop.me.character.y}, vel={x:0,y:0}, angle=null){
-        this.playerId = id;
-        this.gunpower = damage;
-        this.BulletSpeed = BulletSpeed;
-        this.lifetime = lifetime;
-        this.startTime = Date.now();
+    constructor(id, bulletId, damage, BulletSpeed, lifetime, pos={x: wop.me.character.x, y: wop.me.character.y}, vel={x:0,y:0}, angle=null){
+      this.playerId = id;
+      this.bulletId = bulletId;
+      this.damage = damage;
+      this.BulletSpeed = BulletSpeed;
+      this.lifetime = lifetime;
+      this.startTime = Date.now();
 
-        let vektorZamik = new Phaser.Math.Vector2(27, 8);
+      let vektorZamik = new Phaser.Math.Vector2(27, 8);
 
-        this.metek = wop.scene.physics.add.image(pos.x, pos.y, 'bullet');
+      this.metek = wop.scene.physics.add.image(pos.x, pos.y, 'bullet');
 
-        let angleFinal = angle
-            ? angle / 180 * Math.PI
-            : new Phaser.Math.Vector2(vel.x, vel.y).angle();
+      let angleFinal = angle
+          ? angle / 180 * Math.PI
+          : new Phaser.Math.Vector2(vel.x, vel.y).angle();
 
-        vektorZamik.rotate(angleFinal);
-        this.metek.x += vektorZamik.x;
-        this.metek.y += vektorZamik.y;
+      vektorZamik.rotate(angleFinal);
+      this.metek.x += vektorZamik.x;
+      this.metek.y += vektorZamik.y;
 
-        this.metek.body.setVelocity(vel.x, vel.y);
-        if(vel.y === 0) this.metek.body.velocity.rotate(angleFinal);
-        this.metek.rotation = angleFinal;
-        this.metek.setScale(1.0);
+      this.metek.body.setVelocity(vel.x, vel.y);
+      if(vel.y === 0) this.metek.body.velocity.rotate(angleFinal);
+      this.metek.rotation = angleFinal;
+      this.metek.setScale(1.0);
 
-        var bulletMusic = wop.scene.sound.add("Gunshot");
-        bulletMusic.setVolume(0.6);
-        bulletMusic.play();
+      var bulletMusic = wop.scene.sound.add("Gunshot");
+      bulletMusic.setVolume(0.6);
+      bulletMusic.play();
 
     }
 }

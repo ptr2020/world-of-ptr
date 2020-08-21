@@ -1,0 +1,27 @@
+/* 
+        // Reset them to the original orientation
+        this.rotateCorners(bulletCorners, bulletAngle);
+        this.rotateCorners(playerCorners, player.direction);
+
+        // First align the player rect
+        this.rotateCorners(bulletCorners, Math.PI * 2 - player.direction);
+        this.rotateCorners(playerCorners,  Math.PI * 2 - player.direction);
+ */
+
+ /*         // Get the angle of the bullet, we already have it for the player
+        let bulletAngle = MathWOP.vectorAngle({ x: bullet.velocity.x, y: bullet.velocity.y });
+        //console.log(bulletAngle);
+
+        // Normalize the x-axis so we can calculate point vectors of rectangle corners
+        let playerVector = MathWOP.vectorRotate({ x: player.position.x, y: player.position.y }, Math.PI * 2 - player.direction);
+        let bulletVector = MathWOP.vectorRotate({ x: bullet.position.x, y: bullet.position.y }, Math.PI * 2 - bulletAngle); */
+
+        // Get the point vectors of the corners
+        //let bulletCorners = this.getRectCorners(bullet.position, this.bulletWidth, this.bulletHeight);
+
+    
+    rotateCorners(corners: MathWOP.Vector2[], angle: number){
+        for(let i = 0; i < 4; i++){
+            corners[i] = MathWOP.vectorRotate(corners[i], angle);
+        }
+    }

@@ -45,7 +45,23 @@ export default class Players extends Feature {
         if (message.correlationToken == wop.me.correlationToken) {
           return;
         }
-        wop.state.addPlayer(new Player(wop, message.id, message.name, message.pos.x, message.pos.y, 0, false));
+        var newplayer = new Player(wop, message.id, message.name, message.pos.x, message.pos.y, 0, false);
+        wop.state.addPlayer(newplayer);
+        var copyOfPlayers = wop.state.state.players
+        for (let index = 0; index < copyOfPlayers.length; index++) {
+          const element = copyOfPlayers[index];
+          if (element.id == message.id) {
+            wop.scene.physics.add.collider(wop.me.character, wop.state.state.players[index].character);
+          }
+        }
+        newplayer.update();
+
+        /*if (wop.state.getPlayers() != []) {
+          //wop.state.state.playersGroup = this.physics.add.dynamicGroup();
+          wop.state.getPlayers().forEach(element => {
+            wop.scene.physics.add.collider(wop.me.character.body, element.character.body);
+          });
+        }*/
         break;
 
       case 'player.leave':

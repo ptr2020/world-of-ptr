@@ -2,7 +2,8 @@ import * as Phaser from 'phaser';
 import State from "../state/state";
 import Player from "../state/player";
 import features from "../features";
-import {TILE_TYPES} from "../state/state";
+import { TILE_TYPES } from "../state/state";
+import Players from '../features/players';
 
 
 export default function create(wop) {
@@ -58,7 +59,7 @@ export default function create(wop) {
             break;
         }
         image.setScale(wop.state.state.tileSize, wop.state.state.tileSize).setOrigin(0, 0).refreshBody();
-        
+
       }
     }
     

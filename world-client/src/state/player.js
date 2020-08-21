@@ -132,20 +132,23 @@ export default class Player {
     this.nameText.y = this.character.y -this.character.height*0.75;
 
     if (!this.isAlive && this.deadFadeOut > 0) {
-      console.log(this.deadFadeOut);
       this.deadFadeOut -= 0.04;
       this.character.setAlpha(this.deadFadeOut);
     }
     // Bush check
     if (this.standingOn == "bush") {
-      this.character.setAlpha(this.isMe ? 0.6 : 0.15);
-      this.nameText.setAlpha(this.isMe ? 0.6 : 0);
+      if (this.isAlive) {
+        this.character.setAlpha(this.isMe ? 0.6 : 0.15);
+        this.nameText.setAlpha(this.isMe ? 0.6 : 0);
+      }
       if (this.mentorEmitter) this.mentorEmitter.setAlpha(0.05);
       if (this.mentorEmitter2) this.mentorEmitter2.setAlpha(0.1);
 
     } else {
-      this.character.setAlpha(1);
-      this.nameText.setAlpha(1);
+      if (this.isAlive) {
+        this.character.setAlpha(1);
+        this.nameText.setAlpha(1);
+      }
       if (this.mentorEmitter && this.mentorMode) this.mentorEmitter.setAlpha(0.15);
       if (this.mentorEmitter2 && this.mentorMode) this.mentorEmitter2.setAlpha(0.3);
     }
@@ -184,9 +187,11 @@ export default class Player {
     this.isAlive = isAlive;
     this.nameText.setAlpha(isAlive ? 1 : 0);
     if (isAlive) {
-      this.deadFadeOut = 1;
       this.character.setAlpha(1);
+    } else {
+      this.deadFadeOut = 1; // Will fade out to 0 in update
     }
+
   }
 
   setMentorMode(bool) {

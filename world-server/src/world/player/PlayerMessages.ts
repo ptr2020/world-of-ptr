@@ -60,18 +60,20 @@ export class PlayerLeaveMessage extends PlayerMessage {
 }
 
 export class PlayerShootMessage extends PlayerMessage {
-    constructor(id: string, pos: Vector2, vel: Vector2, damage: number, lifetime: number){
+    constructor(playerId: string, bulletId: string, pos: Vector2, vel: Vector2, damage: number, lifetime: number){
         super();
         this.type = 'player.shoot';
-        this.id = id;
+        this.id = playerId;
         this.pos = pos;
         this.vel = vel;
         this.damage = damage;
         this.lifetime = lifetime;
+        this.bulletId = bulletId;
     }
 
     public pos: Vector2;
     public vel: Vector2;
+    public bulletId: string;
     public damage: number;
     public lifetime: number;
 }
@@ -134,6 +136,16 @@ export class PlayerSniperMessage extends PlayerMessage {
     public sniperMode: boolean;
 }
 
+export class BulletHitMessage extends PlayerMessage {
+    constructor(id: string, bulletId: string) {
+        super();
+        this.type = 'bullet.hit';
+        this.id = id;
+        this.bulletId = bulletId;
+    }
+
+    public bulletId: string;
+}
 export class PlayerMentorMessage extends PlayerMessage {
   constructor(id: string, mentorMode: boolean) {
     super();

@@ -10,7 +10,9 @@ import {
   PlayerDieMessage,
   PlayerShootMessage,
   PlayerSniperMessage,
-  PlayerRotateMessage, PlayerMentorMessage
+  BulletHitMessage,
+  PlayerRotateMessage, 
+  PlayerMentorMessage
 } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
@@ -70,7 +72,8 @@ export class PlayerHandler implements Messages.MsgHandler {
 
     public getTypes(): string[] {
         return ['player.join', 'player.leave', 'player.move', 'player.rotate', 'player.health',
-          'player.respawn', 'player.shoot', 'player.changename', 'player.sniper', 'player.mentor'];
+          'player.respawn', 'player.shoot', 'player.changename', 'player.sniper', 'bullet.hit',
+          'player.mentor'];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -148,7 +151,7 @@ export class PlayerHandler implements Messages.MsgHandler {
                 Router.emit(new BroadcastMessage(message));
                 break;
                 
-            case 'player.health':
+           /*  case 'player.health':
                 let healthMessage = message as PlayerHealthMessage;
 
                 let isAlive = player!.addHealth(healthMessage.deltaHealth);
@@ -162,7 +165,7 @@ export class PlayerHandler implements Messages.MsgHandler {
                     player!.die();
                     
                 }
-                break;
+                break; */
 
             case 'player.respawn':
                 let respawnMessage = message as PlayerRespawnMessage;
@@ -176,7 +179,7 @@ export class PlayerHandler implements Messages.MsgHandler {
             case 'player.shoot':
                 let shootMessage = message as PlayerShootMessage;
                 // Uncomment this when we have a physics loop
-                this.bullets.push(new Bullet(shootMessage.pos, shootMessage.vel, player!.id, shootMessage.damage, shootMessage.lifetime));
+                this.bullets.push(new Bullet(shootMessage.bulletId, shootMessage.pos, shootMessage.vel, player!.id, shootMessage.damage, shootMessage.lifetime));
                 Router.emit(new BroadcastMessage(shootMessage));
                 break;
 
@@ -194,6 +197,11 @@ export class PlayerHandler implements Messages.MsgHandler {
                 Router.emit(new BroadcastMessage(sniperMessage));
                 break;
 
+            case 'bullet.hit':
+                let bulletMessage = message as BulletHitMessage;
+                Router.emit(new BroadcastMessage(bulletMessage));
+                break;
+                
             case 'player.mentor':
                 let mentorMessage = message as PlayerMentorMessage;
                 Router.emit(new BroadcastMessage(mentorMessage));
