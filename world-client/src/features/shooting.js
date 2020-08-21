@@ -83,7 +83,9 @@ export default class Shooting extends Feature {
     wop.sniperModeOnText.visible = wop.sniperMode;
     wop.crosshair.visible = wop.sniperMode;
     if (wop.sniperMode) {
+      let vektorZamik = new Phaser.Math.Vector2(27, 8);
       var vector = new Phaser.Math.Vector2(100, 0);
+      vector.add(vektorZamik);
       vector.rotate(wop.me.character.rotation);
       wop.crosshair.setPosition(
         wop.me.character.x +vector.x, 
