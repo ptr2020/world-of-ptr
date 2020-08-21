@@ -37,6 +37,18 @@ export class PlayerMoveMessage extends PlayerMessage {
     public r: boolean;
 }
 
+export class PlayerRotateMessage extends PlayerMessage {
+    constructor(id: string, dir: number) {
+        super();
+
+        this.type = 'player.rotate';
+        this.id = id;
+        this.dir = dir;
+    }
+
+    public dir: number;
+}
+
 export class PlayerLeaveMessage extends PlayerMessage {
     constructor(id: string) {
         super();

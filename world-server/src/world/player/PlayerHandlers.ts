@@ -1,5 +1,17 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage, PlayerHealthMessage, PlayerRespawnMessage, PlayerDieMessage, PlayerShootMessage, PlayerSniperMessage } from './PlayerMessages';
+import {
+  PlayerMessage,
+  PlayerMoveMessage,
+  PlayerJoinMessage,
+  PlayerLeaveMessage,
+  PlayerNameMessage,
+  PlayerHealthMessage,
+  PlayerRespawnMessage,
+  PlayerDieMessage,
+  PlayerShootMessage,
+  PlayerSniperMessage,
+  PlayerRotateMessage
+} from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
@@ -57,7 +69,7 @@ export class PlayerHandler implements Messages.MsgHandler {
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move', 'player.health', 'player.respawn', 'player.shoot', 'player.changename', 'player.sniper' ];
+        return ['player.join', 'player.leave', 'player.move', 'player.rotate', 'player.health', 'player.respawn', 'player.shoot', 'player.changename', 'player.sniper' ];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -114,6 +126,13 @@ export class PlayerHandler implements Messages.MsgHandler {
                 moveMsg.pos = player!.position;
                 moveMsg.vel = player!.velocity;
                 Router.emit(new BroadcastMessage(moveMsg));
+                break;
+
+            case 'player.rotate':
+                let rotateMsg = message as PlayerRotateMessage;
+                // In reality, server should validate received pos with it's own and send back corrections
+                player!.direction = rotateMsg.dir;
+                Router.emit(new BroadcastMessage(rotateMsg));
                 break;
 
             case 'player.leave':

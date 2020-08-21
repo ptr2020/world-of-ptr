@@ -71,6 +71,13 @@ export default class Players extends Feature {
 
         break;
 
+      case 'player.rotate':
+        // Move the player
+        player = wop.state.getPlayers().find((x) => x.id === message.id && x.id !== wop.me.id);
+        if (!player) return;
+        player.angle = message.dir / Math.PI * 180;
+        break;
+
       case 'player.changename':
         if (message.id != wop.me.id) {
           let player = wop.state.getPlayers().find((x) => x.id === message.id);

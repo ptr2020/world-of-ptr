@@ -145,6 +145,7 @@ export default class Me extends Feature {
     if (wop.me.isAlive) {
       // Prepare move vector
       var sprint = false;
+      var rotating = false;
       var goingBackwards = false;
       if (wop.keyActions.sprint.isDown && !wop.keyActions.turnLeft.isDown && !wop.keyActions.turnRight.isDown) {
         // Sprint enabled
@@ -176,6 +177,7 @@ export default class Me extends Feature {
         } else {
           wop.me.angle -= wop.me.turnSpeed;
         }
+        rotating = true;
       }
       if (wop.keyActions.turnRight.isDown || wop.keyActions.turnRightAlt.isDown) {
         // turnRight
@@ -186,15 +188,24 @@ export default class Me extends Feature {
         else {
           wop.me.angle += wop.me.turnSpeed;
         }
+        rotating = true;
       }
 
       if (!currentVel.equals(wop.me.character.body.velocity)) {
+        // Player velocity vector changed
         wop.socket.send({
           type: 'player.move',
           id: wop.me.id,
           pos: { x: wop.me.character.x, y: wop.me.character.y },
           vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y },
           r: goingBackwards
+        });
+      } else if (wop.me.character.body.velocity.length() < 0.01 && rotating) {
+        // Player velocity vector is zero and we are rotating
+        wop.socket.send({
+          type: 'player.rotate',
+          id: wop.me.id,
+          dir: wop.me.angle/180 * Math.PI,
         });
       }
     }
