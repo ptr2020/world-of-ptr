@@ -39,18 +39,6 @@ export default class Shooting extends Feature {
         correlationToken: wop.me.correlationToken
       });
     });
-
-    //SNIPER MODE
-    wop.sniperModeOnText = wop.scene.add.text(350, 180, 'Sniper Mode On', {
-      fontFamily: 'Yu Gothic Medium',
-      color: 'white',
-      fontSize: 14,
-    });
-    //wop.sniperModeOnText.setShadow(0, 0, 'white', 2);
-    wop.sniperModeOnText.setOrigin(0, 0);
-    wop.sniperModeOnText.setScrollFactor(0, 0);
-    wop.sniperModeOnText.setPosition(window.innerWidth / 4 + 2, window.innerHeight / 4 + 20 + 5);
-    wop.sniperModeOnText.visible = false;
   }
   update(wop) {
     super.update(wop);
@@ -60,7 +48,6 @@ export default class Shooting extends Feature {
            wop.state.state.bullets[i].metek.destroy();
            wop.state.state.bullets.splice(i, 1);
        }
-        
     }
     // Game frame update logic here
     if (wop.keyActions.shoot.isDown && Date.now() - this.startTime > 120 ){
@@ -91,7 +78,6 @@ export default class Shooting extends Feature {
         // TODO: read bullet properties from the player object, hardcoded for now
     }
 
-    wop.sniperModeOnText.visible = wop.sniperMode;
     wop.crosshair.visible = wop.sniperMode;
     if (wop.sniperMode) {
       let vektorZamik = new Phaser.Math.Vector2(27, 8);

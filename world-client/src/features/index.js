@@ -8,7 +8,6 @@ import Shooting from "./shooting";
 import Sounds from "./sounds";
 import Environment from "./environment";
 import Game from "./game";
-import HelpScreen from "./helpscreen";
 
 export default {
   me: new Me(),
@@ -21,5 +20,4 @@ export default {
   sounds: new Sounds(), 
   environment: new Environment(),
   game: new Game(),
-  helpscreen: new HelpScreen()
 };

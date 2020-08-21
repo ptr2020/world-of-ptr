@@ -132,6 +132,7 @@ export default class Player {
     this.nameText.y = this.character.y -this.character.height*0.75;
 
     if (!this.isAlive && this.deadFadeOut > 0) {
+      console.log(this.deadFadeOut);
       this.deadFadeOut -= 0.04;
       this.character.setAlpha(this.deadFadeOut);
     }

@@ -4,5 +4,4 @@ export default class Feature {
   create(wop) {}
   update(wop) {}
   onSocketMessage(wop, message) {}
-
 }

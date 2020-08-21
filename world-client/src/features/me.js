@@ -19,10 +19,6 @@ export default class Me extends Feature {
     wop.scene.load.atlas('gems', 'resources/gems.png', 'resources/gems.json');
     wop.scene.load.atlas('anime', 'resources/anime.png', 'resources/anime.json');
     wop.scene.load.atlas('yeehaw', 'resources/Yeehaw.png', 'resources/Yeehaw.json');
-
-    // Health bar image
-    wop.scene.load.image('healthBar', 'resources/health_bar.png');
-    wop.scene.load.image('healthBarPlayers', 'resources/health_bar_players.png');
   }
 
   create(wop) {
@@ -89,43 +85,12 @@ export default class Me extends Feature {
 
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
-      helpScreen: KeyCodes.H,
       sniperMode: KeyCodes.E,
     }, false);
 
     wop.keyActions.toggleDebug.addListener('down', () => {
       wop.debugMode = !wop.debugMode;
     });
-
-    // Health bar image
-    wop.me.healthBarImage = wop.scene.add.image(425, 500, 'healthBar');
-    wop.me.healthBarImage.setScale(0.4);
-    wop.me.healthBarImage.depth = 101;
-    wop.me.healthBarImage.setScrollFactor(0, 0);
-
-    wop.me.healthBarRect = wop.scene.add.rectangle(434, 507, 150, 20, 0x00ff00, 1);
-    wop.me.healthBarRect.depth = 100;
-    wop.me.healthBarRect.setScrollFactor(0, 0);
-
-    wop.me.respawnText = wop.scene.add.text(500, 225, 'You are dead!', { 
-      fontFamily: 'Sans Sherif',
-      fontSize: 50,
-      color: 'red',
-
-    });
-
-    wop.me.respawnText.visible = false;
-    wop.me.respawnText.setScrollFactor(0, 0);
-
-    wop.me.respawnTimer = wop.scene.add.text(530, 280, '' , { 
-      fontFamily: 'Sans Sherif',
-      fontSize: 20,
-      color: 'white',
-
-    });
-
-    wop.me.respawnTimer.visible = false;
-    wop.me.respawnTimer.setScrollFactor(0, 0);
 
     wop.keyActions.change_name.addListener('down', () => {
         let newName = prompt("Vpiši ime:");
@@ -244,13 +209,13 @@ export default class Me extends Feature {
     } else if (message.type == "player.die") {
       if (message.id === wop.me.id) {
         wop.me.setIsAlive(false);
-        wop.me.respawnText.visible = true;
-        wop.me.respawnTimer.visible = true;
+        wop.ui.scene.respawnText.visible = true;
+        wop.ui.scene.respawnTimer.visible = true;
         let sekunde = message.respawnTime;
-        wop.me.respawnTimer.text = 'You will respawn in... ' + sekunde;
+        wop.ui.scene.respawnTimer.text = 'You will respawn in ... ' + sekunde;
         sekunde--;
         wop.me.respawnTimeout = setInterval(() => {
-          wop.me.respawnTimer.text = 'You will respawn in... ' + sekunde.toString();
+          wop.ui.scene.respawnTimer.text = 'You will respawn in ... ' + sekunde.toString();
           sekunde--;
           if(sekunde == 0) clearInterval(wop.me.respawnTimeout);
         }, 1000);
@@ -258,8 +223,8 @@ export default class Me extends Feature {
     } else if (message.type == "player.respawn") {
       if (message.id === wop.me.id) {
         wop.me.setIsAlive(true);
-        wop.me.respawnText.visible = false;
-        wop.me.respawnTimer.visible = false;
+        wop.ui.scene.respawnText.visible = false;
+        wop.ui.scene.respawnTimer.visible = false;
         wop.me.health = wop.me.maxHealth;
         wop.me.character.x = message.pos.x;
         wop.me.character.y = message.pos.y;

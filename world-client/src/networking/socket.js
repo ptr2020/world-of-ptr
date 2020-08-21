@@ -32,6 +32,10 @@ export default class Socket {
       for (var featureName in features) {
         features[featureName].onSocketMessage(wop, message);
       }
+
+      if (wop.ui) {
+        wop.ui.onSocketMessage(wop, message);
+      }
     };
 
     this.socket.onclose = (e) => {

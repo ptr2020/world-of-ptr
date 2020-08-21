@@ -73,6 +73,7 @@ export default function create(wop) {
     this.physics.add.overlap(wop.me.character, wop.state.state.grassGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.storeGroup);
   
+    wop.game.scene.run('ui');
     wop.socket.connect();
 
     // Don't propagate events for keypresses
