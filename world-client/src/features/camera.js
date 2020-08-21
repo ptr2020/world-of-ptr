@@ -40,7 +40,6 @@ export default class Camera extends Feature {
     }, { passive: false });
 
     document.addEventListener('keydown', (event) => {
-      console.log("keydown", event.key);
       if ((event.ctrlKey || event.metaKey) && event.key === '+') {
         if (this.zoom < 5) {
           this.zoom += wop.scene.cameras.main.zoom * 0.1;
