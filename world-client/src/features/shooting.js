@@ -13,6 +13,7 @@ export default class Shooting extends Feature {
     wop.scene.load.image('bullet', 'resources/bullet5.png');
     wop.scene.load.image('crosshair', 'resources/crosshair2.png');
     wop.scene.load.audio('Gunshot', 'resources/audio/Gunshot1.mp3');
+    wop.scene.load.audio('SniperSound', 'resources/audio/SniperSound.mp3');
 
     // Preload game resources here
 
@@ -137,6 +138,14 @@ export class Bullet {
         this.lifetime = lifetime;
         this.startTime = Date.now();
 
+        var player;
+        if (id == wop.me.id) player = wop.me;
+        else player = wop.state.getPlayers().find((x) => x.id === id);
+
+        var sniperMode = wop.sniperMode;
+        if (id && player) sniperMode = player.sniperMode;
+        console.log("Shot", id, sniperMode, player);
+
         let vektorZamik = new Phaser.Math.Vector2(27, 8);
 
         this.metek = wop.scene.physics.add.image(pos.x, pos.y, 'bullet');
@@ -154,9 +163,17 @@ export class Bullet {
         this.metek.rotation = angleFinal;
         this.metek.setScale(1.0);
 
-        var bulletMusic = wop.scene.sound.add("Gunshot");
-        bulletMusic.setVolume(0.6);
-        bulletMusic.play();
+        if (sniperMode){
+          var bulletMusic = wop.scene.sound.add("SniperSound");
+          bulletMusic.setVolume(0.6);
+          bulletMusic.play();
+        } else {       
+          var bulletMusic = wop.scene.sound.add("Gunshot");
+          bulletMusic.setVolume(0.6);
+          bulletMusic.play();
+        }
+
+        
 
     }
 }

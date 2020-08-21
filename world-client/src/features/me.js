@@ -251,6 +251,8 @@ export default class Me extends Feature {
       }
     } else if (message.type == 'player.changename' && message.id == wop.me.id) {
       wop.me.setName(message.name);
+    } else if (message.type == 'player.sniper' && message.id == wop.me.id) {
+      wop.me.sniperMode = message.sniperMode;
     }
   }
 }

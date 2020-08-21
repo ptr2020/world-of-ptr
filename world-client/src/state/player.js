@@ -12,6 +12,7 @@ export default class Player {
     this.turnSpeed = 5;
     this.isAlive = true;
     this.deadFadeOut = 1;
+    this.sniperMode = false;
 
     this.maxHealth = 100;
     this.health = this.maxHealth;
