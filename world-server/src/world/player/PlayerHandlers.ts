@@ -1,18 +1,21 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerShootMessage, PlayerNameMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage, PlayerHealthMessage, PlayerRespawnMessage, PlayerDieMessage, PlayerShootMessage, PlayerSniperMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
 import { Bullet } from './Bullet';
 import { allowedNodeEnvironmentFlags } from 'process';
+import { GameTimeMessage } from '../../game/GameMessages';
 
 export class PlayerHandler implements Messages.MsgHandler {
     private players: Player[];
     private bullets: Bullet[];
+    private startTime: Date;
 
-    constructor(players: Player[], bullets: Bullet[]) {
+    constructor(players: Player[], bullets: Bullet[], startTime: Date) {
         this.players = players;
         this.bullets = bullets;
+        this.startTime = startTime;
     }
 
     // A few random names to return when player joins with an invalid name
@@ -28,6 +31,11 @@ export class PlayerHandler implements Messages.MsgHandler {
         "Dick Butkiss",
         "Pat Myass",
         "Belle E. Flopp",
+        "Mr. Whiener",
+        "Dick Smasher",
+        "Jack Goff",
+        "Justin Sider",
+        "Willie Stroker",
     ];
 
     // Validate name is present, between 3 and 20 characters and only contains alphanumeric characters and spaces
@@ -39,12 +47,17 @@ export class PlayerHandler implements Messages.MsgHandler {
         if (!name.match(/^[\w ]+$/)) {
             return false;
         }
+        for(let i = 0;i < this.players.length; i++){
+            if(name == this.players[i].name){
+                return false;
+            }
+        }
 
         return name.length > 3 && name.length < 20;
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move', 'player.shoot', 'player.changename'];
+        return ['player.join', 'player.leave', 'player.move', 'player.health', 'player.respawn', 'player.shoot', 'player.changename', 'player.sniper' ];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -73,10 +86,13 @@ export class PlayerHandler implements Messages.MsgHandler {
                     joinMessage.name = this.randomFunnyNames[Math.floor(Math.random() * this.randomFunnyNames.length)];
                 }
 
+                let newPlayer = this.addPlayer(joinMessage);
+                joinMessage.pos = newPlayer.position;
+
                 // Notify everybody else that player joined
                 Router.emit(new BroadcastMessage(joinMessage));
+                Router.emit(new SendMessage(joinMessage.id, new GameTimeMessage(this.startTime)));
 
-                this.addPlayer(joinMessage);
                 // Emit join messages to new client so we are aware of everyone
                 for (let otherPlayer of this.players) {
                     // Don't send my own data back
@@ -109,11 +125,36 @@ export class PlayerHandler implements Messages.MsgHandler {
                 this.players.splice(index, 1);
                 Router.emit(new BroadcastMessage(message));
                 break;
+                
+            case 'player.health':
+                let healthMessage = message as PlayerHealthMessage;
+
+                let isAlive = player!.addHealth(healthMessage.deltaHealth);
+                Logger.info("Player health changed: "+ player!.health);
+
+                Router.emit(new BroadcastMessage(message));
+
+                if(!isAlive){
+                    let dieMessage = new PlayerDieMessage(player!.id, player!.respawnTime );
+                    Router.emit(new BroadcastMessage(dieMessage));
+                    player!.die();
+                    
+                }
+                break;
+
+            case 'player.respawn':
+                let respawnMessage = message as PlayerRespawnMessage;
+                if(player?.die()) {
+                    respawnMessage.pos = player.respawn(true);
+                }
+
+                Router.emit(new BroadcastMessage(message));
+                break;
             
             case 'player.shoot':
                 let shootMessage = message as PlayerShootMessage;
                 // Uncomment this when we have a physics loop
-                //this.bullets.push(new Bullet(shootMessage.pos, shootMessage.vel, player!.id, shootMessage.damage, shootMessage.lifetime));
+                this.bullets.push(new Bullet(shootMessage.pos, shootMessage.vel, player!.id, shootMessage.damage, shootMessage.lifetime));
                 Router.emit(new BroadcastMessage(shootMessage));
                 break;
 
@@ -124,13 +165,19 @@ export class PlayerHandler implements Messages.MsgHandler {
                 Router.emit(new BroadcastMessage(nameMessage));
                 break;
 
+            case 'player.sniper':
+                let sniperMessage = message as PlayerSniperMessage;
+                // Weapon setting logic: firerate, bullet speed, lifetime
+
+                Router.emit(new BroadcastMessage(sniperMessage));
+                break;
         }
     }
 
-    private addPlayer(msg: PlayerJoinMessage): void {
+    private addPlayer(msg: PlayerJoinMessage): Player {
         let player = new Player(msg.id!, undefined, msg.name, 100, 0, 0, undefined);
-        player.position = msg.pos;
-
+        player.respawn(false);
         this.players.push(player);
+        return player;
     }
 }

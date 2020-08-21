@@ -10,6 +10,8 @@ import { Router } from 'world-core';
 import random = require('random');
 import seedrandom = require('seedrandom');
 import SimplexNoise = require('simplex-noise');
+import { setImmediate } from "timers";
+import * as MathWOP from "./Math";
 import { ChatHandler } from "./chat/ChatHandlers";
 
 export class World {
@@ -30,14 +32,20 @@ export class World {
 
     // The time left in the game in seconds
     public gameTime: number = 0;
+    public startGameTime: Date;
     // List of players sorted by descending score
     public scoreboard: string[] = [];
     public gameSeed: string = "";
 
     private terrainFrequency: number = 0.1; 
 
-    constructor(gameTime: number){
-        this.gameTime = gameTime;
+    private gameFPS: number = parseInt(process.env.GAME_TICKS_PER_SECOND!, 10);
+    private frametime = 1000000 / this.gameFPS;
+    private ticks = 0;
+
+    constructor(){
+        this.startGameTime = new Date();
+        this.gameTime = parseInt(process.env.GAME_DURATION!, 10);
 
         this.players = [];
         this.monsters = [];
@@ -48,7 +56,7 @@ export class World {
         this.shopItems = [];
         this.worldTiles = [];
 
-        this.playerMsgHandler = new PlayerHandler(this.players, this.bullets);
+        this.playerMsgHandler = new PlayerHandler(this.players, this.bullets, this.startGameTime);
         Router.register(this.playerMsgHandler);
 
         this.chatMsgHandler = new ChatHandler(100, this.players);
@@ -62,6 +70,60 @@ export class World {
 
         this.generateWorld();
         this.populateShopItems();
+
+        this.setupGameTick()
+    }
+
+    setupGameTick(){
+        let average = 0;
+        // Send periodic ticks per second
+        let debugTicks = false;
+        let notificationInterval = 20;
+        if(debugTicks){
+            setInterval(() => {
+                average = (average + this.ticks / notificationInterval) / 2;
+                this.ticks = 0;
+            }, notificationInterval * 1000);
+        }
+
+        this.runGameTick(this.getMicroseconds());
+    }
+
+    getMicroseconds(){
+        let hrTime = process.hrtime();
+        return hrTime[0] * 1000000 + hrTime[1] / 1000;
+    }
+
+    runGameTick(startTime: number){
+        if(this.getMicroseconds() - startTime > this.frametime){
+            this.gameTick();
+            this.ticks++;
+            startTime = this.getMicroseconds();
+        }
+        setImmediate(() => this.runGameTick(startTime));
+    }
+
+    gameTick(){
+        // Physics logic here
+        // https://github.com/photonstorm/phaser/blob/ed33253fb1c1167765181c6e984cfdbb8c905d87/src/physics/arcade/Body.js#L1020
+        // Sample update velocity
+
+        for(let i = 0; i < this.players.length; i++){
+            let player = this.players[i];
+            if(player.velocity != {x: 0, y: 0}){
+                let deltaPosition = MathWOP.vectorScale(player.velocity, this.frametime);
+                player.position = MathWOP.vectorAdd(player.position, deltaPosition);
+            }
+        }
+
+        // For now we assume that the server and client are synced in deleting the bullet
+        // The difference is at most the ping of the client but that comes with multiplayer games.
+        for(let i = 0; i < this.bullets.length; i++){
+            let bullet = this.bullets[i];
+            if(Date.now() - bullet.lifeStart > bullet.lifetime){
+                this.bullets.splice(i, 1);
+            }
+        }
 
     }
 

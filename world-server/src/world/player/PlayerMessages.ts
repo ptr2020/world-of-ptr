@@ -72,3 +72,50 @@ export class PlayerNameMessage extends PlayerMessage {
         this.name = name;
     }
 }
+
+export class PlayerHealthMessage extends PlayerMessage {
+    constructor(id: string, deltaHealth: number) {
+        super();
+        
+        this.type = 'player.health';
+        this.id = id;
+        this.deltaHealth = deltaHealth;
+    }
+    public deltaHealth: number;
+
+}
+
+export class PlayerRespawnMessage extends PlayerMessage {
+    constructor(id: string, pos: Vector2) {
+        super();
+        
+        this.type = 'player.respawn';
+        this.id = id;
+        this.pos = pos;
+    }
+    public pos: Vector2;
+
+}
+
+export class PlayerDieMessage extends PlayerMessage {
+    constructor(id: string , respawnTime: number) {
+        super();
+
+        this.type = 'player.die';
+        this.id = id;
+        this.respawnTime = respawnTime;
+    }
+    public respawnTime: number;
+
+}
+
+export class PlayerSniperMessage extends PlayerMessage {
+    constructor(id: string, sniperMode: boolean) {
+        super();
+        this.type = 'player.sniper';
+        this.id = id;
+        this.sniperMode = sniperMode;
+    }
+
+    public sniperMode: boolean;
+}

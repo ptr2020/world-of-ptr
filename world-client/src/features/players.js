@@ -37,6 +37,7 @@ export default class Players extends Feature {
     super.onSocketMessage(wop, message);
 
     // On server message received logic here
+    let player;
     switch (message.type) {
       case 'player.join':
         // Join the player
@@ -53,12 +54,10 @@ export default class Players extends Feature {
 
       case 'player.move':
         // Move the player
-        let player = wop.state.getPlayers().find((x) => x.id === message.id);
-        if (!player)
-          return;
+        player = wop.state.getPlayers().find((x) => x.id === message.id && x.id !== wop.me.id);
+        if (!player) return;
 
-        player.character.x = message.pos.x;
-        player.character.y = message.pos.y;
+        player.serverPosition = message.pos;
         player.character.body.setVelocity(message.vel.x, message.vel.y);
 
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);
@@ -75,7 +74,31 @@ export default class Players extends Feature {
           player.setName(message.name);
         }
         break;
+
+      case 'player.health':
+        // Adds / removes player health.
+        player = wop.state.getPlayers().find((x) => x.id === message.id && x.id !== wop.me.id);
+        if (!player) return;
+        player.addHealth(message.deltaHealth);
+        break;
+
+      case 'player.die':
+        player = wop.state.getPlayers().find((x) => x.id === message.id && x.id !== wop.me.id);
+        if (!player) return;
+        player.setIsAlive(false);
+        break;
+
+      case 'player.respawn':
+        player = wop.state.getPlayers().find((x) => x.id === message.id && x.id !== wop.me.id);
+        if (!player) return;
+        player.setIsAlive(true);
+        player.character.x = message.pos.x;
+        player.character.y = message.pos.y;
+        break;
+      
+      case 'player.sniper':
+        // Sniper weapon logic
+        break;
     }
   }
-
 }

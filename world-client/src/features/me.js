@@ -20,6 +20,9 @@ export default class Me extends Feature {
     wop.scene.load.atlas('anime', 'resources/anime.png', 'resources/anime.json');
     wop.scene.load.atlas('yeehaw', 'resources/Yeehaw.png', 'resources/Yeehaw.json');
 
+    // Health bar image
+    wop.scene.load.image('healthBar', 'resources/health_bar.png');
+    wop.scene.load.image('healthBarPlayers', 'resources/health_bar_players.png');
   }
 
   create(wop) {
@@ -59,7 +62,6 @@ export default class Me extends Feature {
       repeat: -1,
     });
 
-
     // Prepare scene here
     wop.me = new Player(wop, null, null, 300, 200, 0, true);
     wop.me.correlationToken = cryptoRandomString({ length: 10 });
@@ -85,11 +87,42 @@ export default class Me extends Feature {
       toggleDebug: KeyCodes.B,
       gameStop: KeyCodes.ESC,
       helpScreen: KeyCodes.H,
+      sniperMode: KeyCodes.E,
     }, false);
 
     wop.keyActions.toggleDebug.addListener('down', () => {
       wop.debugMode = !wop.debugMode;
     });
+
+    // Health bar image
+    wop.me.healthBarImage = wop.scene.add.image(425, 500, 'healthBar');
+    wop.me.healthBarImage.setScale(0.4);
+    wop.me.healthBarImage.depth = 101;
+    wop.me.healthBarImage.setScrollFactor(0, 0);
+
+    wop.me.healthBarRect = wop.scene.add.rectangle(434, 507, 150, 20, 0x00ff00, 1);
+    wop.me.healthBarRect.depth = 100;
+    wop.me.healthBarRect.setScrollFactor(0, 0);
+
+    wop.me.respawnText = wop.scene.add.text(500, 225, 'You are dead!', { 
+      fontFamily: 'Sans Sherif',
+      fontSize: 50,
+      color: 'red',
+      
+    });
+
+    wop.me.respawnText.visible = false;
+    wop.me.respawnText.setScrollFactor(0, 0);
+
+    wop.me.respawnTimer = wop.scene.add.text(530, 280, '' , { 
+      fontFamily: 'Sans Sherif',
+      fontSize: 20,
+      color: 'white',
+      
+    });
+
+    wop.me.respawnTimer.visible = false;
+    wop.me.respawnTimer.setScrollFactor(0, 0);
 
     wop.keyActions.change_name.addListener('down', () => {
         let newName = prompt("Vpiši ime:");
@@ -100,7 +133,6 @@ export default class Me extends Feature {
           name: newName,
         });
     });
-
   }
 
   update(wop) {
@@ -110,55 +142,74 @@ export default class Me extends Feature {
     wop.me.update();
     let currentVel = wop.me.character.body.velocity.clone();
 
-    // Prepare move vector
-    var sprint = false;
+    if (wop.me.isAlive) {
+      // Prepare move vector
+      var sprint = false;
+      if (wop.keyActions.sprint.isDown && !wop.keyActions.turnLeft.isDown && !wop.keyActions.turnRight.isDown) {
+        // Sprint enabled
+        sprint = true;
+      }
 
-    if (wop.keyActions.sprint.isDown && !wop.keyActions.turnLeft.isDown && !wop.keyActions.turnRight.isDown) {
-      // Sprint enabled
-      sprint = true;
+      if (wop.keyActions.moveForward.isDown || wop.keyActions.moveForwardAlt.isDown) {
+        // moveForward
+        var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
+        if (sprint) vector.scale(wop.me.sprintSpeedFactor);
+        vector.rotate(wop.me.angle / 180 * Math.PI);
+        wop.me.character.body.velocity = vector;
+      } else if (wop.keyActions.moveBack.isDown || wop.keyActions.moveBackAlt.isDown) {
+        // moveBack
+        var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
+        if (sprint) vector.scale(wop.me.sprintSpeedFactor);
+        vector.scale(wop.me.backwardsSpeedFactor);
+        vector.rotate(wop.me.angle / 180 * Math.PI + Math.PI);
+        wop.me.character.body.velocity = vector;
+      } else {
+        wop.me.character.body.setVelocity(0, 0);
+      }
+
+      if (wop.keyActions.turnLeft.isDown || wop.keyActions.turnLeftAlt.isDown) {
+        // turnLeft
+        if (wop.sniperMode){
+          wop.me.angle -= wop.me.sniperTurnSpeed;
+        } else {
+          wop.me.angle -= wop.me.turnSpeed;
+        }
+      }
+      if (wop.keyActions.turnRight.isDown || wop.keyActions.turnRightAlt.isDown) {
+        // turnRight
+        if (wop.sniperMode){
+          wop.me.angle += wop.me.sniperTurnSpeed;
+          
+        }
+        else {
+          wop.me.angle += wop.me.turnSpeed;
+        }
+      }
+
+      if (!currentVel.equals(wop.me.character.body.velocity)) {
+        wop.socket.send({
+          type: 'player.move',
+          id: wop.me.id,
+          pos: { x: wop.me.character.x, y: wop.me.character.y },
+          vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y }
+        });
+      }
     }
 
-    if (wop.keyActions.moveForward.isDown || wop.keyActions.moveForwardAlt.isDown) {
-      // moveForward
-      var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
-      if (sprint) vector.scale(wop.me.sprintSpeedFactor);
-      vector.rotate(wop.me.angle/180*Math.PI);
-      wop.me.character.body.velocity = vector;
-    } else if (wop.keyActions.moveBack.isDown || wop.keyActions.moveBackAlt.isDown) {
-      // moveBack
-      var vector = new Phaser.Math.Vector2(wop.me.speed, 0);
-      if (sprint) vector.scale(wop.me.sprintSpeedFactor);
-      vector.scale(wop.me.backwardsSpeedFactor);
-      vector.rotate(wop.me.angle/180*Math.PI + Math.PI);
-      wop.me.character.body.velocity = vector;
-    } else {
-      wop.me.character.body.setVelocity(0, 0);
-    }
+    // Dolzina health bara glede na nas health
+    wop.me.healthBarRect.width = (wop.me.health / wop.me.maxHealth) * 150;
 
-    if (wop.keyActions.turnLeft.isDown || wop.keyActions.turnLeftAlt.isDown) {
-      // turnLeft
-      wop.me.angle -= wop.me.turnSpeed;
+    // Pobarvamo health bar rdece ce je malo healtha ce ne pa zeleno
+    if (wop.me.health <= 50 && wop.me.health > 30) {
+      wop.me.healthBarRect.fillColor = 0xFF4500;
+    
     }
-    if (wop.keyActions.turnRight.isDown || wop.keyActions.turnRightAlt.isDown) {
-      // turnRight
-      wop.me.angle += wop.me.turnSpeed;
+    else if (wop.me.health <= 30) {
+      wop.me.healthBarRect.fillColor = 0xff0000;
     }
-
-    if (wop.keyActions.gameStop.isDown) {
-      wop.game.isRunning = false;
-      wop.game.destroy();
-      console.log("Game destroyed.");
+    else {
+      wop.me.healthBarRect.fillColor = 0x00ff00;
     }
-  
-    if (!currentVel.equals(wop.me.character.body.velocity)) {
-      wop.socket.send({
-        type: 'player.move',
-        id: wop.me.id,
-        pos: { x: wop.me.character.x, y: wop.me.character.y },
-        vel: { x: wop.me.character.body.velocity.x, y: wop.me.character.body.velocity.y }
-      });
-    }
-
   }
 
   onSocketMessage(wop, message) {
@@ -167,12 +218,39 @@ export default class Me extends Feature {
     // On server message received logic here
     if (message.type == 'player.join' && message.correlationToken == (wop.me || {}).correlationToken) {
       wop.me.id = message.id;
+      wop.me.character.x = message.pos.x;
+      wop.me.character.y = message.pos.y;
+      wop.me.setName(message.name);
+    } else if (message.type == 'player.health') {
+      // Adds / removes player health.
+      if (message.id === wop.me.id) {
+        wop.me.addHealth(message.deltaHealth);
+      }
+    } else if (message.type == "player.die") {
+      if (message.id === wop.me.id) {
+        wop.me.setIsAlive(false);
+        wop.me.respawnText.visible = true;
+        wop.me.respawnTimer.visible = true;
+        let sekunde = message.respawnTime;
+        wop.me.respawnTimer.text = 'You will respawn in... ' + sekunde;
+        sekunde--;
+        wop.me.respawnTimeout = setInterval(() => {
+          wop.me.respawnTimer.text = 'You will respawn in... ' + sekunde.toString();
+          sekunde--;
+          if(sekunde == 0) clearInterval(wop.me.respawnTimeout);
+        }, 1000);
+      }
+    } else if (message.type == "player.respawn") {
+      if (message.id === wop.me.id) {
+        wop.me.setIsAlive(true);
+        wop.me.respawnText.visible = false;
+        wop.me.respawnTimer.visible = false;
+        wop.me.health = wop.me.maxHealth;
+        wop.me.character.x = message.pos.x;
+        wop.me.character.y = message.pos.y;
+      }
+    } else if (message.type == 'player.changename' && message.id == wop.me.id) {
       wop.me.setName(message.name);
     }
-    if (message.type == 'player.changename' && message.id == wop.me.id) {
-      wop.me.setName(message.name);
-    }
-
   }
-
 }

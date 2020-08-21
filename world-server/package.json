@@ -18,6 +18,7 @@
     },
     "dependencies": {
         "crypto-random-string": "^3.2.0",
+        "dotenv": "^8.2.0",
         "random": "^2.2.0",
         "seedrandom": "^3.0.5",
         "simplex-noise": "^2.4.0",

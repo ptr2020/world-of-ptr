@@ -13,7 +13,8 @@ export default class State {
       bullets: [],
       gameSeed: "211231334",
       worldTiles: [],
-      tileSize: 0.25
+      tileSize: 0.25,
+      startGameTime: new Date(),
     };
   }
 

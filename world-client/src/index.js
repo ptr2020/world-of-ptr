@@ -8,7 +8,9 @@ import update from './wop/update';
 var wop = {
   debug: {},
   debugMode: false,
+  sniperMode: false,
 };
+
 window.wop = wop;
 
 // Prepare Phaser game configuration
@@ -33,7 +35,7 @@ var gameConfig = {
 wop.game = new Phaser.Game(gameConfig);
 
 wop.socket = new Socket(wop);
-wop.socket.connect();
+//wop.socket.connect();
 
 // window resize logika
 window.addEventListener('resize', () => {
