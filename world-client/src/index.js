@@ -35,7 +35,7 @@ var gameConfig = {
 wop.game = new Phaser.Game(gameConfig);
 
 wop.socket = new Socket(wop);
-wop.socket.connect();
+//wop.socket.connect();
 
 // window resize logika
 window.addEventListener('resize', () => {

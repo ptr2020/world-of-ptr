@@ -52,13 +52,13 @@ export default class Socket {
       return false;
     }
 
-    if (!this.socket.readyState) {
+    if (!this.socket || !this.socket.readyState) {
       this.msgQueue.push(msg);
+      return true;
     }
     else {
-      var success = this.socket.send(msg);
+      return this.socket.send(msg);
     }
-    return success;
   };
 
   close() {

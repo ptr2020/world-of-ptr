@@ -5,14 +5,17 @@ import { SendMessage, BroadcastMessage } from '../../network';
 import { Player } from './Player';
 import { Bullet } from './Bullet';
 import { allowedNodeEnvironmentFlags } from 'process';
+import { GameTimeMessage } from '../../game/GameMessages';
 
 export class PlayerHandler implements Messages.MsgHandler {
     private players: Player[];
     private bullets: Bullet[];
+    private startTime: Date;
 
-    constructor(players: Player[], bullets: Bullet[]) {
+    constructor(players: Player[], bullets: Bullet[], startTime: Date) {
         this.players = players;
         this.bullets = bullets;
+        this.startTime = startTime;
     }
 
     // A few random names to return when player joins with an invalid name
@@ -88,6 +91,7 @@ export class PlayerHandler implements Messages.MsgHandler {
 
                 // Notify everybody else that player joined
                 Router.emit(new BroadcastMessage(joinMessage));
+                Router.emit(new SendMessage(joinMessage.id, new GameTimeMessage(this.startTime)));
 
                 // Emit join messages to new client so we are aware of everyone
                 for (let otherPlayer of this.players) {

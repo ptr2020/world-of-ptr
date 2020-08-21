@@ -62,28 +62,6 @@ export default function create(wop) {
       }
     }
     
-
-//platforms.create(600, 400, 'ground');
-
-    // Background
-    //var bg = this.add.image(1920 / 2 + 160, 1920 / 2 + 160, 'grid');
-    //var bg = this.add.image(1920/2 +160, 1920/2 +160, 'grassA01');
-    //bg.setScale(3, 3);
-
-
-    // Blocks for fun
-    /*
-    wop.blocks = [];
-    for (var i = 0; i < 100; i++) {
-      var block = this.physics.add.image(400 + i * 24, 300, 'block');
-      block.scale = 0.25;
-      wop.blocks.push(block);
-    }
-    */
-
-    // Display FPS:
-    // game.loop.actualFps
-
     for (var featureName in features) {
       features[featureName].create(wop);
     }
@@ -94,5 +72,7 @@ export default function create(wop) {
     this.physics.add.overlap(wop.me.character, wop.state.state.bushGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.grassGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.storeGroup);
+  
+    wop.socket.connect();
   }
 }

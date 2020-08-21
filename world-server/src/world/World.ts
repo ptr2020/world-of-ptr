@@ -32,6 +32,7 @@ export class World {
 
     // The time left in the game in seconds
     public gameTime: number = 0;
+    public startGameTime: Date;
     // List of players sorted by descending score
     public scoreboard: string[] = [];
     public gameSeed: string = "";
@@ -43,6 +44,7 @@ export class World {
     private ticks = 0;
 
     constructor(){
+        this.startGameTime = new Date();
         this.gameTime = parseInt(process.env.GAME_DURATION!, 10);
 
         this.players = [];
@@ -54,7 +56,7 @@ export class World {
         this.shopItems = [];
         this.worldTiles = [];
 
-        this.playerMsgHandler = new PlayerHandler(this.players, this.bullets);
+        this.playerMsgHandler = new PlayerHandler(this.players, this.bullets, this.startGameTime);
         Router.register(this.playerMsgHandler);
 
         this.chatMsgHandler = new ChatHandler(100, this.players);
