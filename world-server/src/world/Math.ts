@@ -10,3 +10,7 @@ export function vectorAdd(vec1: Vector2, vec2: Vector2): Vector2 {
 export function vectorScale(vec: Vector2, scale: number): Vector2{
     return { x: vec.x * scale, y: vec.y * scale }
 }
+
+export function vectorLength(vec: Vector2): number{
+    return Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+}

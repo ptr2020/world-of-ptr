@@ -160,6 +160,9 @@ export default class Player {
     if (isAlive) {
       this.deadFadeOut = 1;
       this.character.setAlpha(1);
+    } else {
+      this.deadFadeOut = 0;
+      this.character.setAlpha(0);
     }
   }
 }

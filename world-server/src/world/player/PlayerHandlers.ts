@@ -18,6 +18,7 @@ import { Player } from './Player';
 import { Bullet } from './Bullet';
 import { allowedNodeEnvironmentFlags } from 'process';
 import { GameTimeMessage } from '../../game/GameMessages';
+import { vectorLength, vectorAdd, vectorScale } from '../Math';
 
 export class PlayerHandler implements Messages.MsgHandler {
     private players: Player[];
@@ -121,9 +122,20 @@ export class PlayerHandler implements Messages.MsgHandler {
             case 'player.move':
                 let moveMsg = message as PlayerMoveMessage;
                 // In reality, server should validate received pos with it's own and send back corrections
-                player!.position = { x: moveMsg.pos.x, y: moveMsg.pos.y };
-                player!.velocity = { x: moveMsg.vel.x, y: moveMsg.vel.y };
-                moveMsg.pos = player!.position;
+                if(vectorLength(moveMsg.vel) > 200){
+                    let dieMessage = new PlayerDieMessage(player!.id, player!.respawnTime );
+                    Router.emit(new BroadcastMessage(dieMessage));
+                    player!.die();
+                }
+                console.log(Math.abs(vectorLength(vectorAdd(player!.position, vectorScale(moveMsg.pos, -1)))));
+                // Difference between server position and message position
+                if (Math.abs(vectorLength(vectorAdd(player!.position, vectorScale(moveMsg.pos, -1)))) > 300){
+                    moveMsg.pos = player!.position;
+                } else {
+                    player!.position = moveMsg.pos
+                }
+                
+                player!.velocity = moveMsg.vel;
                 moveMsg.vel = player!.velocity;
                 Router.emit(new BroadcastMessage(moveMsg));
                 break;

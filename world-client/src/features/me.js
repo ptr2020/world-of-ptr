@@ -8,6 +8,7 @@ export default class Me extends Feature {
   constructor(){
     super();
     this.inputBox = null;
+    this.ticks = 0;
   }
 
   preload(wop) {
@@ -29,6 +30,12 @@ export default class Me extends Feature {
     super.create(wop);
     // Animations
     var frameRate = 20;
+    let average = 60;
+    setInterval(() => {
+      average = (average + this.ticks / 3) / 2;
+      this.ticks = 0;
+      //console.log(average);
+  }, 3 * 1000);
 
     wop.scene.anims.create({
       key: 'anime_down',
@@ -141,6 +148,8 @@ export default class Me extends Feature {
     // Game frame update logic here
     wop.me.update();
     let currentVel = wop.me.character.body.velocity.clone();
+    this.ticks++;
+
 
     if (wop.me.isAlive) {
       // Prepare move vector
@@ -265,6 +274,9 @@ export default class Me extends Feature {
       }
     } else if (message.type == 'player.changename' && message.id == wop.me.id) {
       wop.me.setName(message.name);
+    } else if (message.type == 'player.move' && message.id == wop.me.id) {
+      wop.me.character.setVelocity(message.vel.x, message.vel.y);
+      wop.me.serverPosition = message.pos;
     }
   }
 }

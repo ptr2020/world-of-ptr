@@ -75,14 +75,15 @@ export class World {
     }
 
     setupGameTick(){
-        let average = 0;
+        let average = 60;
         // Send periodic ticks per second
         let debugTicks = false;
-        let notificationInterval = 20;
+        let notificationInterval = 3;
         if(debugTicks){
             setInterval(() => {
-                average = (average + this.ticks / notificationInterval) / 2;
+                average = (average + (this.ticks / notificationInterval)) / 2;
                 this.ticks = 0;
+                console.log(average);
             }, notificationInterval * 1000);
         }
 
