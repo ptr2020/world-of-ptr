@@ -39,6 +39,7 @@ export default class Shooting extends Feature {
     //wop.sniperModeOnText.setShadow(0, 0, 'white', 2);
     wop.sniperModeOnText.setOrigin(0, 0);
     wop.sniperModeOnText.setScrollFactor(0, 0);
+    wop.sniperModeOnText.setPosition(window.innerWidth / 4 + 2, window.innerHeight / 4 + 20 + 5);
     wop.sniperModeOnText.visible = false;
   }
   update(wop) {
