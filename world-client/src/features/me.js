@@ -31,11 +31,6 @@ export default class Me extends Feature {
     // Animations
     var frameRate = 20;
     let average = 60;
-    setInterval(() => {
-      average = (average + this.ticks / 3) / 2;
-      this.ticks = 0;
-      //console.log(average);
-  }, 3 * 1000);
 
     wop.scene.anims.create({
       key: 'anime_down',
