@@ -176,20 +176,6 @@ export default class Me extends Feature {
         });
       }
     }
-
-    // Dolzina health bara glede na nas health
-    wop.me.healthBarRect.width = (wop.me.health / wop.me.maxHealth) * 150;
-
-    // Pobarvamo health bar rdece ce je malo healtha ce ne pa zeleno
-    if (wop.me.health <= 50 && wop.me.health > 30) {
-      wop.me.healthBarRect.fillColor = 0xFF4500;
-    }
-    else if (wop.me.health <= 30) {
-      wop.me.healthBarRect.fillColor = 0xff0000;
-    }
-    else {
-      wop.me.healthBarRect.fillColor = 0x00ff00;
-    }
   }
 
   onSocketMessage(wop, message) {
