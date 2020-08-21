@@ -20,7 +20,7 @@ export default function create(wop) {
     // use this.add.image(x, y, 'example').setOrigin(0, 0) in order to set the origin to the upper left corner
     // You can access the world tiles using wop.state.worldTiles
 
-    var platforms = this.physics.add.staticGroup();
+    wop.state.state.rockGroup = this.physics.add.staticGroup();
     wop.state.state.mudGroup = this.physics.add.staticGroup();
     wop.state.state.grassGroup = this.physics.add.staticGroup();
     wop.state.state.waterGroup = this.physics.add.staticGroup();
@@ -50,7 +50,7 @@ export default function create(wop) {
             break;
           case TILE_TYPES.OBSTACLE:
             // rock
-            image = platforms.create(x * pixels, y * pixels, 'rock');
+            image = wop.state.state.rockGroup.create(x * pixels, y * pixels, 'rock');
             break;
           case TILE_TYPES.SHOP_TILE:
             // shop
@@ -66,7 +66,7 @@ export default function create(wop) {
       features[featureName].create(wop);
     }
 
-    this.physics.add.collider(wop.me.character, platforms);
+    this.physics.add.collider(wop.me.character, wop.state.state.rockGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.mudGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.waterGroup);
     this.physics.add.overlap(wop.me.character, wop.state.state.bushGroup);

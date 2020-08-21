@@ -19,6 +19,7 @@ export default class Players extends Feature {
     wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.grassGroup);
     wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.mudGroup);
     wop.scene.physics.add.overlap(wop.state.state.playersGroup, wop.state.state.waterGroup);
+    wop.scene.physics.add.collider(wop.state.state.playersGroup, wop.state.state.rockGroup);
   }
 
   update(wop) {
@@ -59,11 +60,22 @@ export default class Players extends Feature {
 
         player.serverPosition = message.pos;
         player.character.body.setVelocity(message.vel.x, message.vel.y);
+        player.messageReceiveTime = Date.now();
+        player.messageProcessed = false;
 
         var vector = new Phaser.Math.Vector2(message.vel.x, message.vel.y);
         if (vector.length() > 0) {
-          player.angle = (vector.angle()) / (2*Math.PI) * 360;
+          var goingBackRotation = message.r ? 180 : 0;
+          player.angle = (vector.angle()) / (2*Math.PI) * 360 + goingBackRotation;
         }
+
+        break;
+
+      case 'player.rotate':
+        // Move the player
+        player = wop.state.getPlayers().find((x) => x.id === message.id && x.id !== wop.me.id);
+        if (!player) return;
+        player.angle = message.dir / Math.PI * 180;
         break;
 
       case 'player.changename':

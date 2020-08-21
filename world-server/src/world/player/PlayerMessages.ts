@@ -22,17 +22,31 @@ export class PlayerJoinMessage extends PlayerMessage {
 }
 
 export class PlayerMoveMessage extends PlayerMessage {
-    constructor(id: string, pos: Vector2, vel: Vector2) {
+    constructor(id: string, pos: Vector2, vel: Vector2, r: boolean) {
         super();
         
         this.type = 'player.move';
         this.id = id;
         this.pos = pos;
         this.vel = vel;
+        this.r = r;
     }
 
     public pos: Vector2;
     public vel: Vector2;
+    public r: boolean;
+}
+
+export class PlayerRotateMessage extends PlayerMessage {
+    constructor(id: string, dir: number) {
+        super();
+
+        this.type = 'player.rotate';
+        this.id = id;
+        this.dir = dir;
+    }
+
+    public dir: number;
 }
 
 export class PlayerLeaveMessage extends PlayerMessage {
