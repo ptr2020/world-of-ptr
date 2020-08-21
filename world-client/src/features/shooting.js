@@ -6,6 +6,7 @@ export default class Shooting extends Feature {
   constructor(){
     super();
     this.startTime = 0;
+    
   }
 
   preload(wop) {
@@ -20,15 +21,34 @@ export default class Shooting extends Feature {
   }
   create(wop) {
     super.create(wop);
+    
+    wop.firerate = 150;
+    wop.bulletSpeed = 700;
+    wop.bulletDamage = 40;
 
     // Prepare scene here
     wop.crosshair = wop.scene.physics.add.sprite(0, 0, 'crosshair');
-    wop.crosshair.setScale(0.4, 0.4);
+    wop.crosshair.setScale(0.35, 0.35);
     wop.crosshair.depth = 30;
     wop.crosshair.visible = false;
 
+
+
     wop.keyActions.sniperMode.addListener('down', () => {
       wop.sniperMode = !wop.sniperMode;
+
+      if (wop.sniperMode) {
+        wop.firerate = 800;
+        wop.bulletSpeed = 1200;
+        wop.bulletDamage = 70;
+
+      } else {
+        wop.firerate = 150;
+        wop.bulletSpeed = 700;
+        wop.bulletDamage= 40;
+
+      }
+      
       if(wop.sniperMode) {
         wop.me.defaultSpeed *= wop.me.sniperSpeedFactor;
       } else {
@@ -40,6 +60,7 @@ export default class Shooting extends Feature {
         correlationToken: wop.me.correlationToken
       });
     });
+   
 
     //SNIPER MODE
     wop.sniperModeOnText = wop.scene.add.text(350, 180, 'Sniper Mode On', {
@@ -64,12 +85,12 @@ export default class Shooting extends Feature {
         
     }
     // Game frame update logic here
-    if (wop.keyActions.shoot.isDown && Date.now() - this.startTime > 120 ){
+    if (wop.keyActions.shoot.isDown && Date.now() - this.startTime > wop.firerate ){
         this.startTime=Date.now();
         let bullet = new Bullet(
-            wop.me.id, 50, 700, 2000,
+            wop.me.id, wop.bulletDamage, 700, 2000,
             { x: wop.me.character.x, y: wop.me.character.y},
-            { x: 700, y: 0 },
+            { x: wop.bulletSpeed, y: 0 },
             wop.me.angle
         );        
         wop.state.state.bullets.push(bullet);
@@ -134,7 +155,7 @@ export class Bullet {
     constructor(id, damage, BulletSpeed, lifetime, pos={x: wop.me.character.x, y: wop.me.character.y}, vel={x:0,y:0}, angle=null){
         this.playerId = id;
         this.gunpower = damage;
-        this.BulletSpeed = BulletSpeed;
+        this.BulletSpeed = BulletSpeed; // se nic ne uposteva
         this.lifetime = lifetime;
         this.startTime = Date.now();
 
