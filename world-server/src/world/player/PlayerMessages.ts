@@ -133,3 +133,14 @@ export class PlayerSniperMessage extends PlayerMessage {
 
     public sniperMode: boolean;
 }
+
+export class PlayerMentorMessage extends PlayerMessage {
+  constructor(id: string, mentorMode: boolean) {
+    super();
+    this.type = 'player.mentor';
+    this.id = id;
+    this.mentorMode = mentorMode;
+  }
+
+  public mentorMode: boolean;
+}

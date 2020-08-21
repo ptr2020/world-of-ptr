@@ -10,7 +10,7 @@ import {
   PlayerDieMessage,
   PlayerShootMessage,
   PlayerSniperMessage,
-  PlayerRotateMessage
+  PlayerRotateMessage, PlayerMentorMessage
 } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
@@ -69,7 +69,8 @@ export class PlayerHandler implements Messages.MsgHandler {
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move', 'player.rotate', 'player.health', 'player.respawn', 'player.shoot', 'player.changename', 'player.sniper' ];
+        return ['player.join', 'player.leave', 'player.move', 'player.rotate', 'player.health',
+          'player.respawn', 'player.shoot', 'player.changename', 'player.sniper', 'player.mentor'];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -191,6 +192,11 @@ export class PlayerHandler implements Messages.MsgHandler {
                 // Weapon setting logic: firerate, bullet speed, lifetime
 
                 Router.emit(new BroadcastMessage(sniperMessage));
+                break;
+
+            case 'player.mentor':
+                let mentorMessage = message as PlayerMentorMessage;
+                Router.emit(new BroadcastMessage(mentorMessage));
                 break;
         }
     }

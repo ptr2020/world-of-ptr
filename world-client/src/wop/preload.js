@@ -16,6 +16,7 @@ export default function preload(wop) {
     this.load.image('shop', 'resources/shop.jpg');
     this.load.image('water', 'resources/water.jpg');
 
+    this.load.image('particleBlue', 'resources/particleBlue.png');
 
     for (var featureName in features) {
       features[featureName].preload(wop);

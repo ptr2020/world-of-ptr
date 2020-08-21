@@ -111,6 +111,12 @@ export default class Players extends Feature {
       case 'player.sniper':
         // Sniper weapon logic
         break;
+
+      case 'player.mentor':
+        player = wop.state.getPlayers().find((x) => x.id === message.clientId && x.id !== wop.me.id);
+        if (!player) return;
+        player.setMentorMode(message.mentorMode);
+        break;
     }
   }
 }

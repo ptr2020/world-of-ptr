@@ -14,7 +14,7 @@ export default class State {
       gameSeed: "211231334",
       worldTiles: [],
       tileSize: 0.25,
-      startGameTime: new Date(),
+      startGameTime: new Date(new Date() -1000*150),
     };
   }
 

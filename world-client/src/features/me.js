@@ -66,6 +66,7 @@ export default class Me extends Feature {
     wop.me = new Player(wop, null, null, 300, 200, 0, true);
     wop.me.correlationToken = cryptoRandomString({ length: 10 });
     wop.me.name = window.localStorage.getItem('playerName');
+    wop.me.character.depth = 5;
     wop.socket.send({
       type: 'player.join',
       pos: { x: wop.me.character.x, y: wop.me.character.y },
@@ -265,6 +266,8 @@ export default class Me extends Feature {
       }
     } else if (message.type == 'player.changename' && message.id == wop.me.id) {
       wop.me.setName(message.name);
+    } else if (message.type == 'player.mentor' && message.clientId == wop.me.id) {
+      wop.me.setMentorMode(message.mentorMode);
     }
   }
 }

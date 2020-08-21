@@ -30,25 +30,25 @@ export default class Environment extends Feature {
 
     // Game frame update logic here
     const diff = new Date () - (wop.state.state.startGameTime -0);
-    const cycleDuration = 600*1000;
-    const timeOfDay = (diff / cycleDuration) % 1;
+    wop.cycleDuration = 600*1000;
+    wop.timeOfDay = (diff / wop.cycleDuration) % 1;
     //return;
     var tdVal;
-    if (timeOfDay < nightToDayDuration) {
+    if (wop.timeOfDay < nightToDayDuration) {
         // night -> day
-        tdVal = EasingFunctions.easeInOutCubic(timeOfDay/nightToDayDuration);
-        wop.nightShade.alpha = nightAlpha * (1 - tdVal); 
-    } else if (timeOfDay < nightToDayDuration + dayDuration) {
+        tdVal = EasingFunctions.easeInOutCubic(wop.timeOfDay/nightToDayDuration);
+        wop.nightShade.alpha = nightAlpha * (1 - tdVal);
+    } else if (wop.timeOfDay < nightToDayDuration + dayDuration) {
         // day
-        tdVal = EasingFunctions.easeInOutCubic((timeOfDay - nightToDayDuration)/dayDuration);
+        tdVal = EasingFunctions.easeInOutCubic((wop.timeOfDay - nightToDayDuration)/dayDuration);
         wop.nightShade.alpha = 0; 
-    } else if (timeOfDay < nightToDayDuration + dayDuration + dayToNightDuration) {
+    } else if (wop.timeOfDay < nightToDayDuration + dayDuration + dayToNightDuration) {
         // day -> night
-        tdVal = EasingFunctions.easeInOutCubic((timeOfDay - nightToDayDuration -dayDuration)/dayToNightDuration);
+        tdVal = EasingFunctions.easeInOutCubic((wop.timeOfDay - nightToDayDuration -dayDuration)/dayToNightDuration);
         wop.nightShade.alpha = tdVal * nightAlpha; 
     } else {
         // night
-        tdVal = EasingFunctions.easeInOutCubic((timeOfDay - nightToDayDuration -dayDuration -dayToNightDuration)/nightDuration);
+        tdVal = EasingFunctions.easeInOutCubic((wop.timeOfDay - nightToDayDuration -dayDuration -dayToNightDuration)/nightDuration);
         wop.nightShade.alpha = nightAlpha;
     }
   }
@@ -85,4 +85,4 @@ const EasingFunctions = {
     easeOutQuint: t => 1+(--t)*t*t*t*t,
     // acceleration until halfway, then deceleration 
     easeInOutQuint: t => t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t
-}
+};
