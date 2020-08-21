@@ -4,7 +4,8 @@ export default class Player {
     this.id = id;
     this.name = name;
     this.angle = angle;
-    this.defaultSpeed = 120;
+    this.startSpeed = 120;
+    this.defaultSpeed = this.startSpeed;
     this.sprintSpeedFactor = 1.6;
     this.backwardsSpeedFactor = 0.6;
     this.speed = this.defaultSpeed;
@@ -15,6 +16,7 @@ export default class Player {
     this.maxHealth = 100;
     this.health = this.maxHealth;
     this.sniperTurnSpeed = 1;
+    this.sniperSpeedFactor = 0.3;
 
     this.serverPosition = { x: x, y: y};
     this.onMessagePosition = {x: x, y: y}

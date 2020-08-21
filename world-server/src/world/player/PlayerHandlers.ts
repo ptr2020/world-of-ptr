@@ -1,5 +1,5 @@
 import { Messages, Router, Logger } from 'world-core';
-import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage, PlayerHealthMessage, PlayerRespawnMessage, PlayerDieMessage, PlayerShootMessage } from './PlayerMessages';
+import { PlayerMessage, PlayerMoveMessage, PlayerJoinMessage, PlayerLeaveMessage, PlayerNameMessage, PlayerHealthMessage, PlayerRespawnMessage, PlayerDieMessage, PlayerShootMessage, PlayerSniperMessage } from './PlayerMessages';
 import { SendMessage, BroadcastMessage } from '../../network';
 
 import { Player } from './Player';
@@ -57,7 +57,7 @@ export class PlayerHandler implements Messages.MsgHandler {
     }
 
     public getTypes(): string[] {
-        return ['player.join', 'player.leave', 'player.move', 'player.health', 'player.respawn', 'player.shoot', 'player.changename' ];
+        return ['player.join', 'player.leave', 'player.move', 'player.health', 'player.respawn', 'player.shoot', 'player.changename', 'player.sniper' ];
     }
 
     public validate(msg: Messages.Message): boolean {
@@ -165,6 +165,12 @@ export class PlayerHandler implements Messages.MsgHandler {
                 Router.emit(new BroadcastMessage(nameMessage));
                 break;
 
+            case 'player.sniper':
+                let sniperMessage = message as PlayerSniperMessage;
+                // Weapon setting logic: firerate, bullet speed, lifetime
+
+                Router.emit(new BroadcastMessage(sniperMessage));
+                break;
         }
     }
 

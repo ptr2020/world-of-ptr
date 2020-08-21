@@ -28,6 +28,16 @@ export default class Shooting extends Feature {
 
     wop.keyActions.sniperMode.addListener('down', () => {
       wop.sniperMode = !wop.sniperMode;
+      if(wop.sniperMode) {
+        wop.me.defaultSpeed *= wop.me.sniperSpeedFactor;
+      } else {
+        wop.me.defaultSpeed = wop.me.startSpeed;
+      }
+      wop.socket.send({
+        type: 'player.sniper',
+        sniperMode: wop.sniperMode,
+        correlationToken: wop.me.correlationToken
+      });
     });
 
     //SNIPER MODE
@@ -39,6 +49,7 @@ export default class Shooting extends Feature {
     //wop.sniperModeOnText.setShadow(0, 0, 'white', 2);
     wop.sniperModeOnText.setOrigin(0, 0);
     wop.sniperModeOnText.setScrollFactor(0, 0);
+    wop.sniperModeOnText.setPosition(window.innerWidth / 4 + 2, window.innerHeight / 4 + 20 + 5);
     wop.sniperModeOnText.visible = false;
   }
   update(wop) {
@@ -83,7 +94,9 @@ export default class Shooting extends Feature {
     wop.sniperModeOnText.visible = wop.sniperMode;
     wop.crosshair.visible = wop.sniperMode;
     if (wop.sniperMode) {
+      let vektorZamik = new Phaser.Math.Vector2(27, 8);
       var vector = new Phaser.Math.Vector2(100, 0);
+      vector.add(vektorZamik);
       vector.rotate(wop.me.character.rotation);
       wop.crosshair.setPosition(
         wop.me.character.x +vector.x, 
