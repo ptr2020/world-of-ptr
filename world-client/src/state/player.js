@@ -49,6 +49,8 @@ export default class Player {
       color: 'white'
     });
     this.messageText.depth = 50;
+    this.messageText.setBackgroundColor("rgba(0,0,0,0.4)");
+    this.messageText.setPadding(5, 1, 5, 1);
 
     this.debugText = wop.scene.add.text(x, y, name, {
       fontFamily: 'Arial',
@@ -122,6 +124,7 @@ export default class Player {
     this.nameText.y = this.character.y -this.character.height*0.75;
     this.messageText.x = this.character.x - this.messageText.width / 2;
     this.messageText.y = this.character.y - this.character.height
+    this.messageText.visible = !!this.currentMessage;
     
 
     if (!this.isAlive && this.deadFadeOut > 0) {
