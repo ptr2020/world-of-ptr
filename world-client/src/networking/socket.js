@@ -6,7 +6,10 @@ export default class Socket {
     this.wop = wop;
     this.msgQueue = [];
     this.socket = null;
-    this.firstConnect = false;
+    this.reconnectWait = 10;
+    this.maxTries = 5;
+    this.reconnectTries = 0;
+    this.initReconnect = false;
 
     // Settings
     //this.port = 8081;
@@ -14,16 +17,28 @@ export default class Socket {
     this.host = WOP_HOST;
   }
 
+  tryReconnect(){
+    if(this.wop.socket.reconnectTries > this.wop.socket.maxTries) return;
+    this.wop.socket.reconnectTries++;
+    console.log('retrying...');
+    if(!this.wop.socket.isConnected()){
+      setTimeout(this.wop.socket.tryReconnect, this.wop.socket.reconnectWait * this.wop.socket.reconnectTries * 1000, this.wop.socket);
+      this.wop.socket.socket.close();
+      this.wop.socket.connect()
+    } else {
+      this.wop.socket.reconnectTries = 0;
+      this.wop.me.create();
+    }
+  }
+
   connect() {
     this.socket = new WebSocket(this.host);
-
     this.socket.onopen = (e) => {
       for(const msg of this.msgQueue) {
         this.send(msg);
       }
-
+      console.log('connected!');
       this.msgQueue = undefined;
-      this.firstConnect = true;
     };
 
     this.socket.onmessage = (e) => {
@@ -37,7 +52,10 @@ export default class Socket {
     };
 
     this.socket.onclose = (e) => {
-      // TODO
+      if(!this.initReconnect){
+        setTimeout(this.tryReconnect, this.reconnectWait);
+        this.initReconnect = true;
+      }
     };
 
   };
@@ -48,8 +66,7 @@ export default class Socket {
 
   send(msg) {
     if(!this.isConnected()){
-      if(this.firstConnect) location.reload();
-      else return;
+      return;
     }
     if (!msg) return false;
     if (typeof(msg) == "object"){
