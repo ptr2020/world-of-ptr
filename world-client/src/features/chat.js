@@ -24,6 +24,11 @@ export default class Chat extends Feature {
         inputMessage.value = "";
         inputMessage.blur();
       }
+      if (e.key == "Escape") {
+          e.preventDefault();
+          inputMessage.value = "";
+          inputMessage.blur();
+      }
     }
 
     inputMessage.addEventListener("mousedown", function(event) {
