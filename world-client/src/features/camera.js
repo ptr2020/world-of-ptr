@@ -21,6 +21,19 @@ export default class Camera extends Feature {
     var roundPixels = false;
     wop.scene.cameras.main.startFollow(wop.me.character, roundPixels, 0.08, 0.08);
     wop.scene.cameras.main.setZoom(2);
+
+    // Prevent native browser zoom
+    document.addEventListener('wheel', (event) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    document.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && (event.key === '+' || event.key === '-')) {
+        event.preventDefault();
+      }
+    }, { passive: false });
   }
 
   update(wop) {
