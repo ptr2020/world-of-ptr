@@ -9,7 +9,7 @@ export default class Player {
     this.sprintSpeedFactor = 1.6;
     this.backwardsSpeedFactor = 0.6;
     this.speed = this.defaultSpeed;
-    this.turnSpeed = 7;
+    this.turnSpeed = 7.3;
     this.isAlive = true;
     this.deadFadeOut = 1;
 
